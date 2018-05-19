@@ -102,6 +102,12 @@ class Template
                     </a>
                 </li>
                 <li>
+                    <a href=\"actions.php\">
+                        <i class=\"ti-check\"></i>
+                        <p>Actions</p>
+                    </a>
+                </li>
+                <li>
                     <a href=\"beneficiaries.php\">
                         <i class=\"ti-user\"></i>
                         <p>Beneficiaries</p>
