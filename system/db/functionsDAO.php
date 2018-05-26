@@ -1,22 +1,22 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: aluno
- * Date: 16/03/2018
- * Time: 21:17
+ * User: lucas 3
+ * Date: 25/05/2018
+ * Time: 15:08
  */
 
 require_once "db/conexao.php";
-require_once "classes/action.php";
+require_once "classes/functions.php";
 
-class actionDAO
+class functionsDAO
 {
-
-    public function remover($action) {
+    public function remover($function)
+    {
         global $pdo;
         try {
-            $statement = $pdo->prepare("DELETE FROM tb_action WHERE id_action = :idAction");
-            $statement->bindValue(":idAction", $action->getIdAction());
+            $statement = $pdo->prepare("DELETE FROM tb_functions WHERE id_function = :id");
+            $statement->bindValue(":id", $function->getIdFunction());
             if ($statement->execute()) {
                 return "Registro foi excluído com êxito";
             } else {
@@ -27,45 +27,46 @@ class actionDAO
         }
     }
 
-    public function salvar($action){
+    public function salvar($function){
         global $pdo;
 
         try {
 
-            if ($action->getIdAction() != "") {
-                $statement = $pdo->prepare("UPDATE tb_action SET str_cod_action = :codeAction, str_name_action = :nameAction WHERE id_action = :idAction");
-                $statement->bindValue(":idAction", $action->getIdAction());
+            if ($function->getIdFunction() != "") {
+                $statement = $pdo->prepare("UPDATE tb_functions SET str_cod_function = :code, str_name_function = :nameFunction WHERE id_function = :id;");
+                $statement->bindValue(":id", $function->getIdFunction());
             } else {
-                $statement = $pdo->prepare("INSERT INTO tb_action (str_cod_action, str_name_action) VALUES (:codeAction, :nameAction)");
+                $statement = $pdo->prepare("INSERT INTO tb_functions (str_cod_function, str_name_function) VALUES (:code, :nameFunction)");
             }
-            $statement->bindValue(":codeAction", $action->getCodeAction());
-            $statement->bindValue(":nameAction", $action->getNameAction());
+            $statement->bindValue(":code",$function->getCodeFunction());
+            $statement->bindValue(":nameFunction",$function->getNameFunction());
+
             if ($statement->execute()) {
                 if ($statement->rowCount() > 0) {
-                    return "Dados cadastrados com sucesso!";
+                    echo "Dados cadastrados com sucesso!";
 
                 } else {
-                    return "Erro ao tentar efetivar cadastro";
+                    echo "Erro ao tentar efetivar cadastro";
                 }
             } else {
-                throw new PDOException("Não foi possível executar a declaração sql");
+                throw new PDOException("Erro: Não foi possível executar a declaração sql");
             }
         } catch (PDOException $erro) {
             echo "Erro: " . $erro->getMessage();
         }
     }
-
-    public function atualizar($action) {
+    public function atualizar($function)
+    {
         global $pdo;
         try {
-            $statement = $pdo->prepare("SELECT id_action, str_cod_action, str_name_action FROM tb_action WHERE id_action = :idAction");
-            $statement->bindValue(":idAction", $action->getIdAction());
+            $statement = $pdo->prepare("SELECT id_function, str_cod_function, str_name_function FROM tb_functions WHERE id_function = :id");
+            $statement->bindValue(":id", $function->getIdFunction());
             if ($statement->execute()) {
                 $rs = $statement->fetch(PDO::FETCH_OBJ);
-                $action->setIdAction($rs->id_action);
-                $action->setCodeAction($rs->str_cod_action);
-                $action->setNameAction($rs->str_name_action);
-                return $action;
+                $function->setIdFunction($rs->id_function);
+                $function->setCodeFunction($rs->str_cod_function);
+                $function->setNameFunction($rs->str_name_function);
+                return $function;
             } else {
                 throw new PDOException("Erro: Não foi possível executar a declaração sql");
             }
@@ -94,13 +95,13 @@ class actionDAO
         $linha_inicial = ($pagina_atual - 1) * QTDE_REGISTROS;
 
         /* Instrução de consulta para paginação com MySQL */
-        $sql = "SELECT id_action, str_cod_action, str_name_action FROM tb_action LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
+        $sql = "SELECT id_function, str_cod_function, str_name_function FROM tb_functions LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
         $statement = $pdo->prepare($sql);
         $statement->execute();
         $dados = $statement->fetchAll(PDO::FETCH_OBJ);
 
         /* Conta quantos registos existem na tabela */
-        $sqlContador = "SELECT COUNT(*) AS total_registros FROM tb_action";
+        $sqlContador = "SELECT COUNT(*) AS total_registros FROM tb_functions";
         $statement = $pdo->prepare($sqlContador);
         $statement->execute();
         $valor = $statement->fetch(PDO::FETCH_OBJ);
@@ -142,10 +143,10 @@ class actionDAO
      <tbody>";
             foreach ($dados as $var):
                 echo "<tr>
-        <td>$var->str_cod_action</td>
-        <td>$var->str_name_action</td>
-        <td><a href='?act=upd&idAction=$var->id_action'><i class='ti-reload'></i></a></td>
-        <td><a href='?act=del&idAction=$var->id_action'><i class='ti-close'></i></a></td>
+        <td>$var->str_cod_function</td>
+        <td>$var->str_name_function</td>
+        <td><a href='?act=upd&id=$var->id_function'><i class='ti-reload'></i></a></td>
+        <td><a href='?act=del&id=$var->id_function'><i class='ti-close'></i></a></td>
        </tr>";
             endforeach;
             echo "
@@ -172,6 +173,4 @@ class actionDAO
         endif;
 
     }
-
-
 }

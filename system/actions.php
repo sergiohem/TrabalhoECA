@@ -22,37 +22,37 @@ $template->mainpanel();
 
 // Verificar se foi enviando dados via POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $id = (isset($_POST["id"]) && $_POST["id"] != null) ? $_POST["id"] : "";
-    $code = (isset($_POST["code"]) && $_POST["code"] != null) ? $_POST["code"] : "";
-    $name = (isset($_POST["name"]) && $_POST["name"] != null) ? $_POST["name"] : "";
-} else if (!isset($id)) {
-    // Se não se não foi setado nenhum valor para variável $id
-    $id = (isset($_GET["id"]) && $_GET["id"] != null) ? $_GET["id"] : "";
-    $code = NULL;
-    $name = NULL;
+    $idAction = (isset($_POST["idAction"]) && $_POST["idAction"] != null) ? $_POST["idAction"] : "";
+    $codeAction = (isset($_POST["codeAction"]) && $_POST["codeAction"] != null) ? $_POST["codeAction"] : "";
+    $nameAction = (isset($_POST["nameAction"]) && $_POST["nameAction"] != null) ? $_POST["nameAction"] : "";
+} else if (!isset($idAction)) {
+    // Se não se não foi setado nenhum valor para variável $idAction
+    $idAction = (isset($_GET["idAction"]) && $_GET["idAction"] != null) ? $_GET["idAction"] : "";
+    $codeAction = NULL;
+    $nameAction = NULL;
 }
 
-if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $id != "") {
+if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $idAction != "") {
 
-    $action = new action($id, '', '');
+    $action = new action($idAction, '', '');
 
     $resultado = $object->atualizar($action);
-    $code = $resultado->getCode();
-    $name = $resultado->getName();
+    $codeAction = $resultado->getCodeAction();
+    $nameAction = $resultado->getNameAction();
 }
 
-if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $code != "" && $name != "") {
-    $action = new action($id, $code, $name);
+if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $codeAction != "" && $nameAction != "") {
+    $action = new action($idAction, $codeAction, $nameAction);
     $msg = $object->salvar($action);
-    $id = null;
-    $code = null;
-    $name = null;
+    $idAction = null;
+    $codeAction = null;
+    $nameAction = null;
 }
 
-if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
-    $action = new action($id, '', '');
+if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $idAction != "") {
+    $action = new action($idAction, '', '');
     $msg = $object->remover($action);
-    $id = null;
+    $idAction = null;
 }
 ?>
 
@@ -68,23 +68,23 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                     </div>
                     <div class='content table-responsive'>
 
-                        <form action="?act=save&id=" method="POST" name="form1">
+                        <form action="?act=save&idAction=" method="POST" name="form1">
                             <hr>
                             <i class="ti-save"></i>
-                            <input type="hidden" name="id" value="<?php
-                            // Preenche o id no campo id com um valor "value"
-                            echo (isset($id) && ($id != null || $id != "")) ? $id : '';
+                            <input type="hidden" name="idAction" value="<?php
+                            // Preenche o idAction no campo idAction com um valor "value"
+                            echo (isset($idAction) && ($idAction != null || $idAction != "")) ? $idAction : '';
                             ?>"/>
                             Code:
-                            <input type="text" size="15" name="code" value="<?php
-                            // Preenche o code no campo code com um valor "value"
-                            echo (isset($code) && ($code != null || $code != "")) ? $code : '';
+                            <input type="text" size="15" name="codeAction" value="<?php
+                            // Preenche o codeAction no campo codeAction com um valor "value"
+                            echo (isset($codeAction) && ($codeAction != null || $codeAction != "")) ? $codeAction : '';
 
                             ?>"/>
                             Name:
-                            <input type="text" size="40" name="name" value="<?php
+                            <input type="text" size="40" name="nameAction" value="<?php
                             // Preenche o sigla no campo sigla com um valor "value"
-                            echo (isset($name) && ($name != null || $name != "")) ? $name : '';
+                            echo (isset($nameAction) && ($nameAction != null || $nameAction != "")) ? $nameAction : '';
                             ?>"/>
                             <input type="submit" VALUE="Register"/>
                             <hr>

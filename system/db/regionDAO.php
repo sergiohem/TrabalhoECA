@@ -7,16 +7,17 @@
  */
 
 require_once "db/conexao.php";
-require_once "classes/action.php";
+require_once "classes/region.php";
 
-class actionDAO
+class regionDAO
 {
 
-    public function remover($action) {
+    public function remover($region)
+    {
         global $pdo;
         try {
-            $statement = $pdo->prepare("DELETE FROM tb_action WHERE id_action = :idAction");
-            $statement->bindValue(":idAction", $action->getIdAction());
+            $statement = $pdo->prepare("DELETE FROM tb_region WHERE id_region = :idRegion");
+            $statement->bindValue(":idRegion", $region->getIdRegion());
             if ($statement->execute()) {
                 return "Registro foi excluído com êxito";
             } else {
@@ -27,19 +28,19 @@ class actionDAO
         }
     }
 
-    public function salvar($action){
+    public function salvar($region){
         global $pdo;
 
         try {
 
-            if ($action->getIdAction() != "") {
-                $statement = $pdo->prepare("UPDATE tb_action SET str_cod_action = :codeAction, str_name_action = :nameAction WHERE id_action = :idAction");
-                $statement->bindValue(":idAction", $action->getIdAction());
+            if ($region->getIdRegion() != "") {
+                $statement = $pdo->prepare("UPDATE tb_region SET str_name_region = :nameRegion WHERE id_region = :idRegion");
+                $statement->bindValue(":idRegion", $region->getIdRegion());
             } else {
-                $statement = $pdo->prepare("INSERT INTO tb_action (str_cod_action, str_name_action) VALUES (:codeAction, :nameAction)");
+                $statement = $pdo->prepare("INSERT INTO tb_region (str_name_region) VALUES (:nameRegion)");
             }
-            $statement->bindValue(":codeAction", $action->getCodeAction());
-            $statement->bindValue(":nameAction", $action->getNameAction());
+            $statement->bindValue(":nameRegion", $region->getNameRegion());
+
             if ($statement->execute()) {
                 if ($statement->rowCount() > 0) {
                     return "Dados cadastrados com sucesso!";
@@ -54,18 +55,17 @@ class actionDAO
             echo "Erro: " . $erro->getMessage();
         }
     }
-
-    public function atualizar($action) {
+    public function atualizar($region)
+    {
         global $pdo;
         try {
-            $statement = $pdo->prepare("SELECT id_action, str_cod_action, str_name_action FROM tb_action WHERE id_action = :idAction");
-            $statement->bindValue(":idAction", $action->getIdAction());
+            $statement = $pdo->prepare("SELECT id_region, str_name_region FROM tb_region WHERE id_region = :idRegion");
+            $statement->bindValue(":idRegion", $region->getIdRegion());
             if ($statement->execute()) {
                 $rs = $statement->fetch(PDO::FETCH_OBJ);
-                $action->setIdAction($rs->id_action);
-                $action->setCodeAction($rs->str_cod_action);
-                $action->setNameAction($rs->str_name_action);
-                return $action;
+                $region->setIdRegion($rs->id_region);
+                $region->setNameRegion($rs->str_name_region);
+                return $region;
             } else {
                 throw new PDOException("Erro: Não foi possível executar a declaração sql");
             }
@@ -94,13 +94,13 @@ class actionDAO
         $linha_inicial = ($pagina_atual - 1) * QTDE_REGISTROS;
 
         /* Instrução de consulta para paginação com MySQL */
-        $sql = "SELECT id_action, str_cod_action, str_name_action FROM tb_action LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
+        $sql = "SELECT id_region, str_name_region FROM tb_region LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
         $statement = $pdo->prepare($sql);
         $statement->execute();
         $dados = $statement->fetchAll(PDO::FETCH_OBJ);
 
         /* Conta quantos registos existem na tabela */
-        $sqlContador = "SELECT COUNT(*) AS total_registros FROM tb_action";
+        $sqlContador = "SELECT COUNT(*) AS total_registros FROM tb_region";
         $statement = $pdo->prepare($sqlContador);
         $statement->execute();
         $valor = $statement->fetch(PDO::FETCH_OBJ);
@@ -134,7 +134,6 @@ class actionDAO
      <table class='table table-striped table-bordered'>
      <thead>
        <tr class='active'>
-        <th>Código</th>
         <th>Nome</th>
         <th colspan='2'>Opções</th>
        </tr>
@@ -142,10 +141,9 @@ class actionDAO
      <tbody>";
             foreach ($dados as $var):
                 echo "<tr>
-        <td>$var->str_cod_action</td>
-        <td>$var->str_name_action</td>
-        <td><a href='?act=upd&idAction=$var->id_action'><i class='ti-reload'></i></a></td>
-        <td><a href='?act=del&idAction=$var->id_action'><i class='ti-close'></i></a></td>
+        <td>$var->str_name_region</td>
+        <td><a href='?act=upd&idRegion=$var->id_region'><i class='ti-reload'></i></a></td>
+        <td><a href='?act=del&idRegion=$var->id_region'><i class='ti-close'></i></a></td>
        </tr>";
             endforeach;
             echo "

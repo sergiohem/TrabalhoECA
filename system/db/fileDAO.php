@@ -1,22 +1,21 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: aluno
- * Date: 16/03/2018
- * Time: 21:17
+ * User: lucas 3
+ * Date: 25/05/2018
+ * Time: 17:28
  */
 
 require_once "db/conexao.php";
-require_once "classes/action.php";
-
-class actionDAO
+require_once "classes/file.php";
+class fileDAO
 {
-
-    public function remover($action) {
+    public function remover($file)
+    {
         global $pdo;
         try {
-            $statement = $pdo->prepare("DELETE FROM tb_action WHERE id_action = :idAction");
-            $statement->bindValue(":idAction", $action->getIdAction());
+            $statement = $pdo->prepare("DELETE FROM tb_files WHERE id_file = :id");
+            $statement->bindValue(":id", $file->getIdFile());
             if ($statement->execute()) {
                 return "Registro foi excluído com êxito";
             } else {
@@ -26,46 +25,48 @@ class actionDAO
             return "Erro: " . $erro->getMessage();
         }
     }
-
-    public function salvar($action){
+    public function salvar($file){
         global $pdo;
 
         try {
 
-            if ($action->getIdAction() != "") {
-                $statement = $pdo->prepare("UPDATE tb_action SET str_cod_action = :codeAction, str_name_action = :nameAction WHERE id_action = :idAction");
-                $statement->bindValue(":idAction", $action->getIdAction());
+            if ($file->getIdFile() != "") {
+                $statement = $pdo->prepare("UPDATE tb_files SET str_month = :m, str_name_file = :nameFile, str_year = :y WHERE id_file = :id;");
+                $statement->bindValue(":id", $file->getIdFile());
             } else {
-                $statement = $pdo->prepare("INSERT INTO tb_action (str_cod_action, str_name_action) VALUES (:codeAction, :nameAction)");
+                $statement = $pdo->prepare("INSERT INTO tb_files ( str_name_file, str_month, str_year) VALUES (:nameFile, :m, :y)");
             }
-            $statement->bindValue(":codeAction", $action->getCodeAction());
-            $statement->bindValue(":nameAction", $action->getNameAction());
+            $statement->bindValue(":m",$file->getMonth());
+            $statement->bindValue(":y",$file->getYear());
+            $statement->bindValue(":nameFile",$file->getNameFile());
+
             if ($statement->execute()) {
                 if ($statement->rowCount() > 0) {
-                    return "Dados cadastrados com sucesso!";
+                    echo "Dados cadastrados com sucesso!";
 
                 } else {
-                    return "Erro ao tentar efetivar cadastro";
+                    echo "Erro ao tentar efetivar cadastro";
                 }
             } else {
-                throw new PDOException("Não foi possível executar a declaração sql");
+                throw new PDOException("Erro: Não foi possível executar a declaração sql");
             }
         } catch (PDOException $erro) {
             echo "Erro: " . $erro->getMessage();
         }
     }
-
-    public function atualizar($action) {
+    public function atualizar($file)
+    {
         global $pdo;
         try {
-            $statement = $pdo->prepare("SELECT id_action, str_cod_action, str_name_action FROM tb_action WHERE id_action = :idAction");
-            $statement->bindValue(":idAction", $action->getIdAction());
+            $statement = $pdo->prepare("SELECT id_file, str_name_file, str_month, str_year FROM tb_files WHERE id_file = :id");
+            $statement->bindValue(":id", $file->getIdFile());
             if ($statement->execute()) {
                 $rs = $statement->fetch(PDO::FETCH_OBJ);
-                $action->setIdAction($rs->id_action);
-                $action->setCodeAction($rs->str_cod_action);
-                $action->setNameAction($rs->str_name_action);
-                return $action;
+                $file->setIdFile($rs->id_file);
+                $file->setNameFile($rs->str_name_file);
+                $file->setMonth($rs->str_month);
+                $file->setYear($rs->str_year);
+                return $file;
             } else {
                 throw new PDOException("Erro: Não foi possível executar a declaração sql");
             }
@@ -94,13 +95,13 @@ class actionDAO
         $linha_inicial = ($pagina_atual - 1) * QTDE_REGISTROS;
 
         /* Instrução de consulta para paginação com MySQL */
-        $sql = "SELECT id_action, str_cod_action, str_name_action FROM tb_action LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
+        $sql = "SELECT id_file, str_month, str_name_file, str_year FROM tb_files LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
         $statement = $pdo->prepare($sql);
         $statement->execute();
         $dados = $statement->fetchAll(PDO::FETCH_OBJ);
 
         /* Conta quantos registos existem na tabela */
-        $sqlContador = "SELECT COUNT(*) AS total_registros FROM tb_action";
+        $sqlContador = "SELECT COUNT(*) AS total_registros FROM tb_files";
         $statement = $pdo->prepare($sqlContador);
         $statement->execute();
         $valor = $statement->fetch(PDO::FETCH_OBJ);
@@ -134,7 +135,8 @@ class actionDAO
      <table class='table table-striped table-bordered'>
      <thead>
        <tr class='active'>
-        <th>Código</th>
+        <th>Mês</th>
+        <th>Ano</th>
         <th>Nome</th>
         <th colspan='2'>Opções</th>
        </tr>
@@ -142,10 +144,11 @@ class actionDAO
      <tbody>";
             foreach ($dados as $var):
                 echo "<tr>
-        <td>$var->str_cod_action</td>
-        <td>$var->str_name_action</td>
-        <td><a href='?act=upd&idAction=$var->id_action'><i class='ti-reload'></i></a></td>
-        <td><a href='?act=del&idAction=$var->id_action'><i class='ti-close'></i></a></td>
+        <td>$var->str_month</td>
+        <td>$var->str_year</td>
+        <td>$var->str_name_file</td>
+        <td><a href='?act=upd&id=$var->id_file'><i class='ti-reload'></i></a></td>
+        <td><a href='?act=del&id=$var->id_file'><i class='ti-close'></i></a></td>
        </tr>";
             endforeach;
             echo "
@@ -172,6 +175,4 @@ class actionDAO
         endif;
 
     }
-
-
 }

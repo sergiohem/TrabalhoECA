@@ -7,16 +7,17 @@
  */
 
 require_once "db/conexao.php";
-require_once "classes/action.php";
+require_once "classes/source.php";
 
-class actionDAO
+class sourceDAO
 {
 
-    public function remover($action) {
+    public function remover($source)
+    {
         global $pdo;
         try {
-            $statement = $pdo->prepare("DELETE FROM tb_action WHERE id_action = :idAction");
-            $statement->bindValue(":idAction", $action->getIdAction());
+            $statement = $pdo->prepare("DELETE FROM tb_source WHERE id_source = :idSource");
+            $statement->bindValue(":idSource", $source->getIdSource());
             if ($statement->execute()) {
                 return "Registro foi excluído com êxito";
             } else {
@@ -27,19 +28,20 @@ class actionDAO
         }
     }
 
-    public function salvar($action){
+    public function salvar($source){
         global $pdo;
 
         try {
 
-            if ($action->getIdAction() != "") {
-                $statement = $pdo->prepare("UPDATE tb_action SET str_cod_action = :codeAction, str_name_action = :nameAction WHERE id_action = :idAction");
-                $statement->bindValue(":idAction", $action->getIdAction());
+            if ($source->getIdSource() != "") {
+                $statement = $pdo->prepare("UPDATE tb_source SET str_goal = :goal, str_origin = :origin, str_periodicity = :periodicity WHERE id_source = :idSource");
+                $statement->bindValue(":idSource", $source->getIdSource());
             } else {
-                $statement = $pdo->prepare("INSERT INTO tb_action (str_cod_action, str_name_action) VALUES (:codeAction, :nameAction)");
+                $statement = $pdo->prepare("INSERT INTO tb_source (str_goal, str_origin, str_periodicity) VALUES (:goal, :origin, :periodicity)");
             }
-            $statement->bindValue(":codeAction", $action->getCodeAction());
-            $statement->bindValue(":nameAction", $action->getNameAction());
+            $statement->bindValue(":goal", $source->getGoal());
+            $statement->bindValue(":origin", $source->getOrigin());
+            $statement->bindValue(":periodicity", $source->getPeriodicity());
             if ($statement->execute()) {
                 if ($statement->rowCount() > 0) {
                     return "Dados cadastrados com sucesso!";
@@ -54,20 +56,21 @@ class actionDAO
             echo "Erro: " . $erro->getMessage();
         }
     }
-
-    public function atualizar($action) {
+    public function atualizar($source)
+    {
         global $pdo;
         try {
-            $statement = $pdo->prepare("SELECT id_action, str_cod_action, str_name_action FROM tb_action WHERE id_action = :idAction");
-            $statement->bindValue(":idAction", $action->getIdAction());
+            $statement = $pdo->prepare("SELECT id_source, str_goal, str_origin, str_periodicity FROM tb_source WHERE id_source = :idSource");
+            $statement->bindValue(":idSource", $source->getIdSource());
             if ($statement->execute()) {
                 $rs = $statement->fetch(PDO::FETCH_OBJ);
-                $action->setIdAction($rs->id_action);
-                $action->setCodeAction($rs->str_cod_action);
-                $action->setNameAction($rs->str_name_action);
-                return $action;
+                $source->setIdSource($rs->id_source);
+                $source->setGoal($rs->str_goal);
+                $source->setOrigin($rs->str_origin);
+                $source->setPeriodicity($rs->str_periodicity);
+                return $source;
             } else {
-                throw new PDOException("Erro: Não foi possível executar a declaração sql");
+                throw new PDOException("Não foi possível executar a declaração sql");
             }
         } catch (PDOException $erro) {
             return "Erro: " . $erro->getMessage();
@@ -94,13 +97,13 @@ class actionDAO
         $linha_inicial = ($pagina_atual - 1) * QTDE_REGISTROS;
 
         /* Instrução de consulta para paginação com MySQL */
-        $sql = "SELECT id_action, str_cod_action, str_name_action FROM tb_action LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
+        $sql = "SELECT id_source, str_goal, str_origin, str_periodicity FROM tb_source LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
         $statement = $pdo->prepare($sql);
         $statement->execute();
         $dados = $statement->fetchAll(PDO::FETCH_OBJ);
 
         /* Conta quantos registos existem na tabela */
-        $sqlContador = "SELECT COUNT(*) AS total_registros FROM tb_action";
+        $sqlContador = "SELECT COUNT(*) AS total_registros FROM tb_source";
         $statement = $pdo->prepare($sqlContador);
         $statement->execute();
         $valor = $statement->fetch(PDO::FETCH_OBJ);
@@ -134,18 +137,20 @@ class actionDAO
      <table class='table table-striped table-bordered'>
      <thead>
        <tr class='active'>
-        <th>Código</th>
-        <th>Nome</th>
-        <th colspan='2'>Opções</th>
+        <th>Goal</th>
+        <th>Origin</th>
+        <th>Period city</th>
+        <th colspan='2'>Options</th>
        </tr>
      </thead>
      <tbody>";
             foreach ($dados as $var):
                 echo "<tr>
-        <td>$var->str_cod_action</td>
-        <td>$var->str_name_action</td>
-        <td><a href='?act=upd&idAction=$var->id_action'><i class='ti-reload'></i></a></td>
-        <td><a href='?act=del&idAction=$var->id_action'><i class='ti-close'></i></a></td>
+        <td>$var->str_goal</td>
+        <td>$var->str_origin</td>
+        <td>$var->str_periodicity</td>
+        <td><a href='?act=upd&idSource=$var->id_source'><i class='ti-reload'></i></a></td>
+        <td><a href='?act=del&idSource=$var->id_source'><i class='ti-close'></i></a></td>
        </tr>";
             endforeach;
             echo "

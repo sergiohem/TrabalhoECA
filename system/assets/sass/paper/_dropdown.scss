@@ -12,7 +12,7 @@
     @include opacity(0); 
     @include box-shadow($dropdown-shadow);
         
-//     the style for opening dropdowns on mobile devices; for the desktop version check the _responsive.scss file    
+//     the style for opening dropdowns on mobile devices; for the desktop version check the _responsive.scss file
     .open &{
         @include opacity(1);
         visibility: visible;
