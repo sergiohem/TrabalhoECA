@@ -7,16 +7,16 @@
  */
 
 require_once "db/conexao.php";
-require_once "classes/action.php";
+require_once "classes/subFunction.php";
 
-class actionDAO
+class subFunctionDAO
 {
 
-    public function remover($action) {
+    public function remover($subFunction) {
         global $pdo;
         try {
-            $statement = $pdo->prepare("DELETE FROM tb_action WHERE id_action = :idAction");
-            $statement->bindValue(":idAction", $action->getIdAction());
+            $statement = $pdo->prepare("DELETE FROM tb_subfunctions WHERE id_subfunction = :idSubFunction");
+            $statement->bindValue(":idSubFunction", $subFunction->getIdSubFunction());
             if ($statement->execute()) {
                 return "Registro foi excluído com êxito";
             } else {
@@ -27,19 +27,19 @@ class actionDAO
         }
     }
 
-    public function salvar($action){
+    public function salvar($subfunction){
         global $pdo;
 
         try {
 
-            if ($action->getIdAction() != "") {
-                $statement = $pdo->prepare("UPDATE tb_action SET str_cod_action = :codeAction, str_name_action = :nameAction WHERE id_action = :idAction");
-                $statement->bindValue(":idAction", $action->getIdAction());
+            if ($subfunction->getIdSubFunction() != "") {
+                $statement = $pdo->prepare("UPDATE tb_subfunctions SET str_cod_subfunction = :codeSubFunction, str_name_subfunction = :nameSubFunction WHERE id_subfunction = :idSubFunction");
+                $statement->bindValue(":idSubFunction", $subfunction->getIdSubFunction());
             } else {
-                $statement = $pdo->prepare("INSERT INTO tb_action (str_cod_action, str_name_action) VALUES (:codeAction, :nameAction)");
+                $statement = $pdo->prepare("INSERT INTO tb_subfunctions (str_cod_subfunction, str_name_subfunction) VALUES (:codeSubFunction, :nameSubFunction)");
             }
-            $statement->bindValue(":codeAction", $action->getCodeAction());
-            $statement->bindValue(":nameAction", $action->getNameAction());
+            $statement->bindValue(":codeSubFunction", $subfunction->getCodeSubFunction());
+            $statement->bindValue(":nameSubFunction", $subfunction->getNameSubFunction());
             if ($statement->execute()) {
                 if ($statement->rowCount() > 0) {
                     return "Dados cadastrados com sucesso!";
@@ -55,17 +55,17 @@ class actionDAO
         }
     }
 
-    public function atualizar($action) {
+    public function atualizar($subfunction) {
         global $pdo;
         try {
-            $statement = $pdo->prepare("SELECT id_action, str_cod_action, str_name_action FROM tb_action WHERE id_action = :idAction");
-            $statement->bindValue(":idAction", $action->getIdAction());
+            $statement = $pdo->prepare("SELECT id_subfunction, str_cod_subfunction, str_name_subfunction FROM tb_subfunctions WHERE id_subfunction = :idSubFunction");
+            $statement->bindValue(":idSubFunction", $subfunction->getIdSubFunction());
             if ($statement->execute()) {
                 $rs = $statement->fetch(PDO::FETCH_OBJ);
-                $action->setIdAction($rs->id_action);
-                $action->setCodeAction($rs->str_cod_action);
-                $action->setNameAction($rs->str_name_action);
-                return $action;
+                $subfunction->setIdSubFunction($rs->id_subfunction);
+                $subfunction->setCodeSubFunction($rs->str_cod_subfunction);
+                $subfunction->setNameSubFunction($rs->str_name_subfunction);
+                return $subfunction;
             } else {
                 throw new PDOException("Erro: Não foi possível executar a declaração sql");
             }
@@ -94,13 +94,13 @@ class actionDAO
         $linha_inicial = ($pagina_atual - 1) * QTDE_REGISTROS;
 
         /* Instrução de consulta para paginação com MySQL */
-        $sql = "SELECT id_action, str_cod_action, str_name_action FROM tb_action LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
+        $sql = "SELECT id_subfunction, str_cod_subfunction, str_name_subfunction FROM tb_subfunctions LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
         $statement = $pdo->prepare($sql);
         $statement->execute();
         $dados = $statement->fetchAll(PDO::FETCH_OBJ);
 
         /* Conta quantos registos existem na tabela */
-        $sqlContador = "SELECT COUNT(*) AS total_registros FROM tb_action";
+        $sqlContador = "SELECT COUNT(*) AS total_registros FROM tb_subfunctions";
         $statement = $pdo->prepare($sqlContador);
         $statement->execute();
         $valor = $statement->fetch(PDO::FETCH_OBJ);
@@ -134,18 +134,18 @@ class actionDAO
      <table class='table table-striped table-bordered'>
      <thead>
        <tr class='active'>
-        <th>Código</th>
-        <th>Nome</th>
-        <th colspan='2'>Opções</th>
+        <th>Code</th>
+        <th>Name</th>
+        <th colspan='2'>Options</th>
        </tr>
      </thead>
      <tbody>";
             foreach ($dados as $var):
                 echo "<tr>
-        <td>$var->str_cod_action</td>
-        <td>$var->str_name_action</td>
-        <td><a href='?act=upd&idAction=$var->id_action'><i class='ti-reload'></i></a></td>
-        <td><a href='?act=del&idAction=$var->id_action'><i class='ti-close'></i></a></td>
+        <td>$var->str_cod_subfunction</td>
+        <td>$var->str_name_subfunction</td>
+        <td><a href='?act=upd&idSubFunction=$var->id_subfunction'><i class='ti-reload'></i></a></td>
+        <td><a href='?act=del&idSubFunction=$var->id_subfunction'><i class='ti-close'></i></a></td>
        </tr>";
             endforeach;
             echo "

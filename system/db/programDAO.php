@@ -7,16 +7,17 @@
  */
 
 require_once "db/conexao.php";
-require_once "classes/action.php";
+require_once "classes/program.php";
 
-class actionDAO
+class programDAO
 {
 
-    public function remover($action) {
+    public function remover($program)
+    {
         global $pdo;
         try {
-            $statement = $pdo->prepare("DELETE FROM tb_action WHERE id_action = :idAction");
-            $statement->bindValue(":idAction", $action->getIdAction());
+            $statement = $pdo->prepare("DELETE FROM tb_program WHERE id_program = :idProgram");
+            $statement->bindValue(":idProgram", $program->getIdProgram());
             if ($statement->execute()) {
                 return "Registro foi excluído com êxito";
             } else {
@@ -27,19 +28,19 @@ class actionDAO
         }
     }
 
-    public function salvar($action){
+    public function salvar($program){
         global $pdo;
 
         try {
 
-            if ($action->getIdAction() != "") {
-                $statement = $pdo->prepare("UPDATE tb_action SET str_cod_action = :codeAction, str_name_action = :nameAction WHERE id_action = :idAction");
-                $statement->bindValue(":idAction", $action->getIdAction());
+            if ($program->getIdProgram() != "") {
+                $statement = $pdo->prepare("UPDATE tb_program SET str_cod_program = :codeProgram, str_name_program  = :nameProgram WHERE id_program = :idProgram");
+                $statement->bindValue(":idProgram", $program->getIdProgram());
             } else {
-                $statement = $pdo->prepare("INSERT INTO tb_action (str_cod_action, str_name_action) VALUES (:codeAction, :nameAction)");
+                $statement = $pdo->prepare("INSERT INTO tb_program (str_cod_program, str_name_program) VALUES (:codeProgram, :nameProgram)");
             }
-            $statement->bindValue(":codeAction", $action->getCodeAction());
-            $statement->bindValue(":nameAction", $action->getNameAction());
+            $statement->bindValue(":codeProgram", $program->getCodeProgram());
+            $statement->bindValue(":nameProgram", $program->getNameProgram());
             if ($statement->execute()) {
                 if ($statement->rowCount() > 0) {
                     return "Dados cadastrados com sucesso!";
@@ -54,18 +55,18 @@ class actionDAO
             echo "Erro: " . $erro->getMessage();
         }
     }
-
-    public function atualizar($action) {
+    public function atualizar($program)
+    {
         global $pdo;
         try {
-            $statement = $pdo->prepare("SELECT id_action, str_cod_action, str_name_action FROM tb_action WHERE id_action = :idAction");
-            $statement->bindValue(":idAction", $action->getIdAction());
+            $statement = $pdo->prepare("SELECT id_program, str_cod_program, str_name_program FROM tb_program WHERE id_program = :idProgram");
+            $statement->bindValue(":idProgram", $program->getIdProgram());
             if ($statement->execute()) {
                 $rs = $statement->fetch(PDO::FETCH_OBJ);
-                $action->setIdAction($rs->id_action);
-                $action->setCodeAction($rs->str_cod_action);
-                $action->setNameAction($rs->str_name_action);
-                return $action;
+                $program->setIdProgram($rs->id_program);
+                $program->setCodeProgram($rs->str_cod_program);
+                $program->setNameProgram($rs->str_name_program);
+                return $program;
             } else {
                 throw new PDOException("Erro: Não foi possível executar a declaração sql");
             }
@@ -94,13 +95,13 @@ class actionDAO
         $linha_inicial = ($pagina_atual - 1) * QTDE_REGISTROS;
 
         /* Instrução de consulta para paginação com MySQL */
-        $sql = "SELECT id_action, str_cod_action, str_name_action FROM tb_action LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
+        $sql = "SELECT id_program, str_cod_program, str_name_program FROM tb_program LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
         $statement = $pdo->prepare($sql);
         $statement->execute();
         $dados = $statement->fetchAll(PDO::FETCH_OBJ);
 
         /* Conta quantos registos existem na tabela */
-        $sqlContador = "SELECT COUNT(*) AS total_registros FROM tb_action";
+        $sqlContador = "SELECT COUNT(*) AS total_registros FROM tb_program";
         $statement = $pdo->prepare($sqlContador);
         $statement->execute();
         $valor = $statement->fetch(PDO::FETCH_OBJ);
@@ -142,10 +143,10 @@ class actionDAO
      <tbody>";
             foreach ($dados as $var):
                 echo "<tr>
-        <td>$var->str_cod_action</td>
-        <td>$var->str_name_action</td>
-        <td><a href='?act=upd&idAction=$var->id_action'><i class='ti-reload'></i></a></td>
-        <td><a href='?act=del&idAction=$var->id_action'><i class='ti-close'></i></a></td>
+        <td>$var->str_cod_program</td>
+        <td>$var->str_name_program</td>
+        <td><a href='?act=upd&idProgram=$var->id_program'><i class='ti-reload'></i></a></td>
+        <td><a href='?act=del&idProgram=$var->id_program'><i class='ti-close'></i></a></td>
        </tr>";
             endforeach;
             echo "

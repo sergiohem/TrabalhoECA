@@ -115,8 +115,32 @@ class Template
                 </li>
                 <li>
                     <a href=\"programs.php\">
-                        <i class=\"ti-view-list-alt\"></i>
+                        <i class=\"ti-check\"></i>
                         <p>Programs</p>
+                    </a>
+                </li>
+                <li>
+                    <a href=\"regions.php\">
+                        <i class=\"ti-check\"></i>
+                        <p>Regions</p>
+                    </a>
+                </li>
+                <li>
+                    <a href=\"sources.php\">
+                        <i class=\"ti-check\"></i>
+                        <p>Sources</p>
+                    </a>
+                </li>
+                <li>
+                    <a href=\"states.php\">
+                        <i class=\"ti-check\"></i>
+                        <p>States</p>
+                    </a>
+                </li>
+                <li>
+                    <a href=\"subFunctions.php\">
+                        <i class=\"ti-check\"></i>
+                        <p>Subfunctions</p>
                     </a>
                 </li>
             </ul>

@@ -9,14 +9,14 @@
 class action
 {
     private $idAction;
-    private $code;
-    private $name;
+    private $codeAction;
+    private $nameAction;
 
-    public function __construct($idAction, $code, $name)
+    public function __construct($idAction, $codeAction, $nameAction)
     {
         $this->idAction = $idAction;
-        $this->code = $code;
-        $this->name = $name;
+        $this->codeAction = $codeAction;
+        $this->nameAction = $nameAction;
     }
 
     /**
@@ -38,32 +38,34 @@ class action
     /**
      * @return mixed
      */
-    public function getCode()
+    public function getCodeAction()
     {
-        return $this->code;
+        return $this->codeAction;
     }
 
     /**
-     * @param mixed $code
+     * @param mixed $codeAction
      */
-    public function setCode($code): void
+    public function setCodeAction($codeAction): void
     {
-        $this->code = $code;
+        $this->codeAction = $codeAction;
     }
 
     /**
      * @return mixed
      */
-    public function getName()
+    public function getNameAction()
     {
-        return $this->name;
+        return $this->nameAction;
     }
 
     /**
-     * @param mixed $name
+     * @param mixed $nameAction
      */
-    public function setName($name): void
+    public function setNameAction($nameAction): void
     {
-        $this->name = $name;
+        $this->nameAction = $nameAction;
     }
+
+
 }
