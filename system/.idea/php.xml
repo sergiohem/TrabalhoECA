@@ -3,6 +3,7 @@
   <component name="PhpIncludePathManager">
     <include_path>
 <<<<<<< HEAD
+<<<<<<< HEAD
       <path value="$PROJECT_DIR$/vendor/phpspec/prophecy" />
       <path value="$PROJECT_DIR$/vendor/davefx/phplot" />
       <path value="$PROJECT_DIR$/vendor/doctrine/instantiator" />
@@ -35,6 +36,8 @@
       <path value="$PROJECT_DIR$/vendor/phpunit/phpunit" />
       <path value="$PROJECT_DIR$/vendor/composer" />
 =======
+=======
+>>>>>>> 24fe86f4569f719a221e1b24c8bde07dce7373ca
       <path value="$PROJECT_DIR$/vendor/doctrine/instantiator" />
       <path value="$PROJECT_DIR$/vendor/phpmailer/phpmailer" />
       <path value="$PROJECT_DIR$/vendor/sebastian/global-state" />
@@ -66,6 +69,9 @@
       <path value="$PROJECT_DIR$/vendor/theseer/tokenizer" />
       <path value="$PROJECT_DIR$/vendor/phar-io/manifest" />
       <path value="$PROJECT_DIR$/vendor/phar-io/version" />
+<<<<<<< HEAD
+>>>>>>> 24fe86f4569f719a221e1b24c8bde07dce7373ca
+=======
 >>>>>>> 24fe86f4569f719a221e1b24c8bde07dce7373ca
     </include_path>
   </component>
