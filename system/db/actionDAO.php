@@ -6,8 +6,8 @@
  * Time: 21:17
  */
 
-require_once "db/conexao.php";
-require_once "classes/action.php";
+require_once("../db/conexao.php");
+require_once("../classes/action.php");
 
 class actionDAO
 {
@@ -66,6 +66,22 @@ class actionDAO
                 $action->setCodeAction($rs->str_cod_action);
                 $action->setNameAction($rs->str_name_action);
                 return $action;
+            } else {
+                throw new PDOException("Erro: Não foi possível executar a declaração sql");
+            }
+        } catch (PDOException $erro) {
+            return "Erro: " . $erro->getMessage();
+        }
+    }
+
+    public function listarActionsPorCodigo($codigo) {
+        global $pdo;
+        try {
+            $statement = $pdo->prepare("SELECT id_action, str_cod_action, str_name_action FROM tb_action WHERE str_cod_action = :codigoAction");
+            $statement->bindValue(":codigoAction", $codigo);
+            if ($statement->execute()) {
+                $rs = $statement->fetchAll(PDO::FETCH_OBJ);
+                return $rs;
             } else {
                 throw new PDOException("Erro: Não foi possível executar a declaração sql");
             }

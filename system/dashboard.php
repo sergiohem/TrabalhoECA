@@ -134,7 +134,7 @@ $template->mainpanel();
                             </div>
                             <hr>
                             <div class="stats">
-                                <i class="ti-info-alt"></i> Historic Serie | <i class="ti-export"></i><a> Export PDF</a>
+                                <i class="ti-info-alt"></i> Historic Serie | <i class="ti-export"></i><a href="reportPDF/beneficiariesPDF.php"> Export PDF</a>
                             </div>
                         </div>
                     </div>

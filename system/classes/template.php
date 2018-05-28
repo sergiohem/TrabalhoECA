@@ -120,11 +120,15 @@ class Template
                     </a>
                 </li>
                 <li>
-<<<<<<< HEAD
-<<<<<<< HEAD
                     <a href=\"functions.php\">
                         <i class=\"ti-hand-point-right\"></i>
                         <p>Functions</p>
+                    </a>
+                </li>
+                <li>
+                    <a href=\"payments.php\">
+                        <i class=\"ti-money\"></i>
+                        <p>Payments</p>
                     </a>
                 </li>
                 <li>
@@ -137,9 +141,6 @@ class Template
                     <a href=\"cities.php\">
                         <i class=\"ti-map\"></i>
                         <p>Cities</p>
-=======
-=======
->>>>>>> 24fe86f4569f719a221e1b24c8bde07dce7373ca
                     <a href=\"regions.php\">
                         <i class=\"ti-check\"></i>
                         <p>Regions</p>
@@ -161,10 +162,12 @@ class Template
                     <a href=\"subFunctions.php\">
                         <i class=\"ti-check\"></i>
                         <p>Subfunctions</p>
-<<<<<<< HEAD
->>>>>>> 24fe86f4569f719a221e1b24c8bde07dce7373ca
-=======
->>>>>>> 24fe86f4569f719a221e1b24c8bde07dce7373ca
+                    </a>
+                </li>
+                <li>
+                    <a href=\"reports.php\">
+                        <i class=\"ti-export\"></i>
+                        <p>PDF reports</p>
                     </a>
                 </li>
             </ul>

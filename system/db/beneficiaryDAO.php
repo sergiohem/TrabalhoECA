@@ -6,8 +6,8 @@
  * Time: 14:12
  */
 
-require_once "db/conexao.php";
-require_once "classes/beneficiary.php";
+require_once("../db/conexao.php");
+require_once("../classes/beneficiary.php");
 
 class beneficiaryDAO
 {
@@ -27,7 +27,8 @@ class beneficiaryDAO
         }
     }
 
-    public function salvar($beneficiary){
+    public function salvar($beneficiary)
+    {
         global $pdo;
 
         try {
@@ -38,8 +39,8 @@ class beneficiaryDAO
             } else {
                 $statement = $pdo->prepare("INSERT INTO tb_beneficiaries (str_nis, str_name_person) VALUES (:nis, :namePerson)");
             }
-            $statement->bindValue(":nis",$beneficiary->getNis());
-            $statement->bindValue(":namePerson",$beneficiary->getNamePerson());
+            $statement->bindValue(":nis", $beneficiary->getNis());
+            $statement->bindValue(":namePerson", $beneficiary->getNamePerson());
 
             if ($statement->execute()) {
                 if ($statement->rowCount() > 0) {
@@ -55,6 +56,7 @@ class beneficiaryDAO
             echo "Erro: " . $erro->getMessage();
         }
     }
+
     public function atualizar($beneficiary)
     {
         global $pdo;
@@ -67,6 +69,96 @@ class beneficiaryDAO
                 $beneficiary->setNis($rs->str_nis);
                 $beneficiary->setNamePerson($rs->str_name_person);
                 return $beneficiary;
+            } else {
+                throw new PDOException("Erro: Não foi possível executar a declaração sql");
+            }
+        } catch (PDOException $erro) {
+            return "Erro: " . $erro->getMessage();
+        }
+    }
+
+    public function listarBeneficiariosOrdemAlfabetica()
+    {
+        global $pdo;
+        try {
+            $statement = $pdo->prepare("SELECT str_nis, str_name_person FROM tb_beneficiaries ORDER BY str_name_person LIMIT 20");
+            if ($statement->execute()) {
+                $rs = $statement->fetchAll(PDO::FETCH_OBJ);
+                date_default_timezone_set('America/Sao_Paulo');
+                $html = '<h2>BENEFICIARIES ORDER BY NAME</h2>
+<br />
+<p>Report generation date: '.date('d/m/Y h:i:s').'hs</p>
+<br />
+<table class="table table-striped" border="1">
+     <thead>
+       <tr>
+        <th style="font-weight: bold; text-align: center;">NIS</th>
+        <th style="font-weight: bold; text-align: center;">Name</th>
+       </tr>
+       <br/>
+     </thead>
+     <tbody>';
+
+                foreach ($rs as $benef) {
+                    $html .= '<tr><td>'.$benef->str_nis.'</td><td>'.$benef->str_name_person.'</td></tr>';
+                }
+
+                $html .= '</tbody>
+     </table>
+';
+                return $html;
+            } else {
+                throw new PDOException("Erro: Não foi possível executar a declaração sql");
+            }
+        } catch (PDOException $erro) {
+            return "Erro: " . $erro->getMessage();
+        }
+    }
+
+    public function listarBeneficiariosESuasCidades()
+    {
+        global $pdo;
+        try {
+            $statement = $pdo->prepare("SELECT 
+    ben.str_nis, ben.str_name_person, city.str_name_city, city.str_cod_siafi_city, state.str_uf
+FROM
+    tb_payments AS pay
+        JOIN
+    tb_beneficiaries AS ben ON pay.tb_beneficiaries_id_beneficiaries = ben.id_beneficiaries
+        JOIN
+    tb_city AS city ON pay.tb_city_id_city = city.id_city
+        JOIN
+    tb_state AS state ON city.tb_state_id_state = state.id_state
+ORDER BY city.str_name_city, ben.str_name_person LIMIT 20");
+
+            if ($statement->execute()) {
+                $rs = $statement->fetchAll(PDO::FETCH_OBJ);
+                date_default_timezone_set('America/Sao_Paulo');
+                $html = '<h2>BENEFICIARIES AND THEIR CITIES</h2>
+<br />
+<p>Report generation date: '.date('d/m/Y H:i:s', time()).'</p>
+<br />
+<table class="table table-striped" border="1">
+     <thead>
+       <tr>
+        <th style="font-weight: bold; text-align: center;">NIS</th>
+        <th style="font-weight: bold; text-align: center;">Beneficiary</th>
+        <th style="font-weight: bold; text-align: center;">City</th>
+        <th style="font-weight: bold; text-align: center;">State city</th>
+        <th style="font-weight: bold; text-align: center;">Siafi city</th>
+       </tr>
+       <br/>
+     </thead>
+     <tbody>';
+
+                foreach ($rs as $benef) {
+                    $html .= '<tr><td>'.$benef->str_nis.'</td><td>'.$benef->str_name_person.'</td><td>'.$benef->str_name_city.'</td><td>'.$benef->str_uf.'</td><td>'.$benef->str_cod_siafi_city.'</td></tr>';
+                }
+
+                $html .= '</tbody>
+     </table>
+';
+                return $html;
             } else {
                 throw new PDOException("Erro: Não foi possível executar a declaração sql");
             }

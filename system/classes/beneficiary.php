@@ -12,6 +12,8 @@ class beneficiary
     private $nis;
     private $namePerson;
 
+
+
     /**
      * beneficiary constructor.
      * @param $idBeneficiary

@@ -85,10 +85,24 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                             echo (isset($codSiafi) && ($codSiafi != null || $codSiafi != "")) ? $codSiafi : '';
                             ?>"/>
                             State:
-                            <input type="text" size="11" name="cityState" value="<?php
-                            // Preenche o cityState no campo cityState com um valor "value"
-                            echo (isset($cityState) && ($cityState != null || $cityState != "")) ? $cityState : '';
-                            ?>"/>
+                            <select name="cityState" style="width: 30%;">
+                                <?php
+                                $query = "SELECT * FROM tb_state order by str_name;";
+                                $statement = $pdo->prepare($query);
+                                if ($statement->execute()) {
+                                    $result = $statement->fetchAll(PDO::FETCH_OBJ);
+                                    foreach ($result as $rs) {
+                                        if ($rs->tb_state_id_state == $cityState) {
+                                            echo "<option value='$rs->id_state' selected>$rs->str_name</option>";
+                                        } else {
+                                            echo "<option value='$rs->id_state'>$rs->str_name</option>";
+                                        }
+                                    }
+                                } else {
+                                    throw new PDOException("Erro: Não foi possível executar a declaração sql");
+                                }
+                                ?>
+                            </select>
                             Name:
                             <input type="text" size="45" name="name" value="<?php
                             // Preenche o sigla no campo sigla com um valor "value"
