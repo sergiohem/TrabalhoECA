@@ -188,4 +188,210 @@ FROM
             return "Erro: " . $erro->getMessage();
         }
     }
+
+    public function report4(){
+        global $pdo;
+        try {
+            $statement = $pdo->prepare("SELECT 
+    city.str_name_city,
+    st.str_uf,
+    COUNT(pay.id_payment) AS beneficiaries_count,
+    SUM(pay.db_value) AS total_payments
+FROM
+    tb_city AS city
+        JOIN
+    tb_state AS st ON city.tb_state_id_state = st.id_state
+        JOIN
+    tb_payments AS pay ON city.id_city = pay.tb_city_id_city
+        JOIN
+    tb_beneficiaries AS ben ON pay.tb_beneficiaries_id_beneficiaries = ben.id_beneficiaries
+GROUP BY city.id_city
+ORDER BY SUM(pay.db_value) DESC
+LIMIT 20");
+
+            if ($statement->execute()) {
+                $rs = $statement->fetchAll(PDO::FETCH_OBJ);
+                $html = '<h2>PAYMENTS</h2>
+<br />
+<p>Report generation date: '.$this->currentDate.'</p>
+<br />
+<table class="table table-striped" border="1">
+     <thead>
+       <tr>
+        <th style="font-weight: bold; text-align: center;">City</th>
+        <th style="font-weight: bold; text-align: center;">Number of beneficiaries</th>
+        <th style="font-weight: bold; text-align: center;">Total value of payments</th>
+       </tr>
+       <br/>
+     </thead>
+     <tbody>';
+
+                foreach ($rs as $payment) {
+                    $html .= '<tr>
+<td>'.$payment->str_name_city.' - '.$payment->str_uf.'</td>
+<td>'.$payment->beneficiaries_count.'</td>
+<td>'.$payment->total_payments.'</td>
+</tr>';
+                }
+
+                $html .= '</tbody>
+     </table>
+';
+                return $html;
+            } else {
+                throw new PDOException("Erro: Não foi possível executar a declaração sql");
+            }
+        } catch (PDOException $erro) {
+            return "Erro: " . $erro->getMessage();
+        }
+    }
+
+    public function report5(){
+        global $pdo;
+        try {
+            $statement = $pdo->prepare("SELECT 
+    ben.str_nis, ben.str_name_person, COUNT(pay.id_payment) as payments_number
+FROM
+    tb_payments AS pay
+        JOIN
+    tb_beneficiaries AS ben ON pay.tb_beneficiaries_id_beneficiaries = ben.id_beneficiaries
+GROUP BY pay.id_payment
+LIMIT 20");
+
+            if ($statement->execute()) {
+                $rs = $statement->fetchAll(PDO::FETCH_OBJ);
+                $html = '<h2>PAYMENTS</h2>
+<br />
+<p>Report generation date: '.$this->currentDate.'</p>
+<br />
+<table class="table table-striped" border="1">
+     <thead>
+       <tr>
+        <th style="font-weight: bold; text-align: center;">NIS</th>
+        <th style="font-weight: bold; text-align: center;">Beneficiary</th>
+        <th style="font-weight: bold; text-align: center;">Total of payments</th>
+       </tr>
+       <br/>
+     </thead>
+     <tbody>';
+
+                foreach ($rs as $payment) {
+                    $html .= '<tr>
+<td>'.$payment->str_nis.'</td>
+<td>'.$payment->str_name_person.'</td>
+<td>'.$payment->payments_number.'</td>
+</tr>';
+                }
+
+                $html .= '</tbody>
+     </table>
+';
+                return $html;
+            } else {
+                throw new PDOException("Erro: Não foi possível executar a declaração sql");
+            }
+        } catch (PDOException $erro) {
+            return "Erro: " . $erro->getMessage();
+        }
+    }
+
+    public function report6(){
+        global $pdo;
+        try {
+            $statement = $pdo->prepare("SELECT 
+    reg.str_name_region, SUM(pay.db_value) AS totalValuePayments
+FROM
+    tb_payments AS pay
+        JOIN
+    tb_city AS city ON pay.tb_city_id_city = city.id_city
+        JOIN
+    tb_state AS st ON city.tb_state_id_state = st.id_state
+        JOIN
+    tb_region AS reg ON st.tb_region_id_region = reg.id_region
+GROUP BY reg.id_region
+ORDER BY reg.str_name_region");
+
+            if ($statement->execute()) {
+                $rs = $statement->fetchAll(PDO::FETCH_OBJ);
+                $html = '<h2>PAYMENTS</h2>
+<br />
+<p>Report generation date: '.$this->currentDate.'</p>
+<br />
+<table class="table table-striped" border="1">
+     <thead>
+       <tr>
+        <th style="font-weight: bold; text-align: center;">Region</th>
+        <th style="font-weight: bold; text-align: center;">Total value of payments</th>
+       </tr>
+       <br/>
+     </thead>
+     <tbody>';
+
+                foreach ($rs as $payment) {
+                    $html .= '<tr>
+<td>'.$payment->str_name_region.'</td>
+<td>'.$payment->totalValuePayments.'</td>
+</tr>';
+                }
+
+                $html .= '</tbody>
+     </table>
+';
+                return $html;
+            } else {
+                throw new PDOException("Erro: Não foi possível executar a declaração sql");
+            }
+        } catch (PDOException $erro) {
+            return "Erro: " . $erro->getMessage();
+        }
+    }
+
+    public function report7(){
+        global $pdo;
+        try {
+            $statement = $pdo->prepare("SELECT 
+    st.str_name, SUM(pay.db_value) AS totalValuePayments
+FROM
+    tb_payments AS pay
+        JOIN
+    tb_city AS city ON pay.tb_city_id_city = city.id_city
+        JOIN
+    tb_state AS st ON city.tb_state_id_state = st.id_state
+GROUP BY st.id_state
+ORDER BY st.str_name");
+
+            if ($statement->execute()) {
+                $rs = $statement->fetchAll(PDO::FETCH_OBJ);
+                $html = '<h2>PAYMENTS</h2>
+<br />
+<p>Report generation date: '.$this->currentDate.'</p>
+<br />
+<table class="table table-striped" border="1">
+     <thead>
+       <tr>
+        <th style="font-weight: bold; text-align: center;">State</th>
+        <th style="font-weight: bold; text-align: center;">Total value of payments</th>
+       </tr>
+       <br/>
+     </thead>
+     <tbody>';
+
+                foreach ($rs as $payment) {
+                    $html .= '<tr>
+<td>'.$payment->str_name.'</td>
+<td>'.$payment->totalValuePayments.'</td>
+</tr>';
+                }
+
+                $html .= '</tbody>
+     </table>
+';
+                return $html;
+            } else {
+                throw new PDOException("Erro: Não foi possível executar a declaração sql");
+            }
+        } catch (PDOException $erro) {
+            return "Erro: " . $erro->getMessage();
+        }
+    }
 }

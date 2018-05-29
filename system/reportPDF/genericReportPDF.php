@@ -53,6 +53,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             break;
         case "3":
             $html = $reportDAO->listarPagamentos();
+            break;
+        case "4":
+            $html = $reportDAO->report4();
+            break;
+        case "5":
+            $html = $reportDAO->report5();
+            break;
+        case "6":
+            $html = $reportDAO->report6();
+            break;
+        case "7":
+            $html = $reportDAO->report7();
+            break;
         default:
             break;
     }
