@@ -125,7 +125,9 @@ $template->mainpanel();
                         <p class="category">Every year</p>
                     </div>
                     <div class="content">
-                        <div id="chartHours" class="ct-chart"></div>
+                        <div id="chartHours" class="ct-chart">
+                            <img src="graphics/genericGraphic.php" />
+                        </div>
                         <div class="footer">
                             <div class="chart-legend">
                                 <i class="fa fa-circle text-info"></i> Value
@@ -134,7 +136,7 @@ $template->mainpanel();
                             </div>
                             <hr>
                             <div class="stats">
-                                <i class="ti-info-alt"></i> Historic Serie | <i class="ti-export"></i><a href="reportPDF/beneficiariesPDF.php"> Export PDF</a>
+                                <i class="ti-info-alt"></i> Historic Serie | <i class="ti-export"></i><a href="#"> Export PDF</a>
                             </div>
                         </div>
                     </div>
