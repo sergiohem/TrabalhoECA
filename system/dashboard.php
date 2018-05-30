@@ -126,7 +126,7 @@ $template->mainpanel();
                     </div>
                     <div class="content">
                         <div id="chartHours" class="ct-chart">
-                            <img src="graphics/genericGraphic.php" />
+                            <img src="graphics/graphic1.php" />
                         </div>
                         <div class="footer">
                             <div class="chart-legend">

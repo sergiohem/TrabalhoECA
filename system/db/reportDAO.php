@@ -115,7 +115,7 @@ ORDER BY city.str_name_city, ben.str_name_person LIMIT 20");
         try {
             $statement = $pdo->prepare("SELECT 
     benef.str_nis, benef.str_name_person, city.str_name_city, st.str_uf, func.str_name_function, subfunc.str_name_subfunction, prog.str_name_program,
-    act.str_name_action, sour.str_origin, fi.str_name_file, pay.db_value
+    act.str_name_action, sour.str_origin, fi.str_name_file, pay.int_month, pay.int_year, pay.db_value
 FROM
     tb_payments AS pay
 		JOIN
@@ -156,6 +156,8 @@ FROM
         <th style="font-weight: bold; text-align: center;">Action</th>
         <th style="font-weight: bold; text-align: center;">Source (origin)</th>
         <th style="font-weight: bold; text-align: center;">File</th>
+        <th style="font-weight: bold; text-align: center;">Month</th>
+        <th style="font-weight: bold; text-align: center;">Year</th>
         <th style="font-weight: bold; text-align: center;">Value</th>
        </tr>
        <br/>
@@ -173,6 +175,8 @@ FROM
 <td>'.$payment->str_name_action.'</td>
 <td>'.$payment->str_origin.'</td>
 <td>'.$payment->str_name_file.'</td>
+<td>'.$payment->int_month.'</td>
+<td>'.$payment->int_year.'</td>
 <td>'.$payment->db_value.'</td>
 </tr>';
                 }
@@ -196,6 +200,7 @@ FROM
     city.str_name_city,
     st.str_uf,
     COUNT(pay.id_payment) AS beneficiaries_count,
+    pay.int_month,
     SUM(pay.db_value) AS total_payments
 FROM
     tb_city AS city
@@ -205,9 +210,8 @@ FROM
     tb_payments AS pay ON city.id_city = pay.tb_city_id_city
         JOIN
     tb_beneficiaries AS ben ON pay.tb_beneficiaries_id_beneficiaries = ben.id_beneficiaries
-GROUP BY city.id_city
-ORDER BY SUM(pay.db_value) DESC
-LIMIT 20");
+GROUP BY city.id_city, pay.int_month
+ORDER BY SUM(pay.db_value) DESC");
 
             if ($statement->execute()) {
                 $rs = $statement->fetchAll(PDO::FETCH_OBJ);
@@ -220,6 +224,7 @@ LIMIT 20");
        <tr>
         <th style="font-weight: bold; text-align: center;">City</th>
         <th style="font-weight: bold; text-align: center;">Number of beneficiaries</th>
+        <th style="font-weight: bold; text-align: center;">Month of payments</th>
         <th style="font-weight: bold; text-align: center;">Total value of payments</th>
        </tr>
        <br/>
@@ -230,6 +235,7 @@ LIMIT 20");
                     $html .= '<tr>
 <td>'.$payment->str_name_city.' - '.$payment->str_uf.'</td>
 <td>'.$payment->beneficiaries_count.'</td>
+<td>'.$payment->int_month.'</td>
 <td>'.$payment->total_payments.'</td>
 </tr>';
                 }
@@ -250,13 +256,13 @@ LIMIT 20");
         global $pdo;
         try {
             $statement = $pdo->prepare("SELECT 
-    ben.str_nis, ben.str_name_person, COUNT(pay.id_payment) as payments_number
+    ben.str_nis, ben.str_name_person, COUNT(pay.id_payment) as payments_number, pay.int_month, pay.db_value
 FROM
     tb_payments AS pay
         JOIN
     tb_beneficiaries AS ben ON pay.tb_beneficiaries_id_beneficiaries = ben.id_beneficiaries
-GROUP BY pay.id_payment
-LIMIT 20");
+GROUP BY ben.id_beneficiaries, pay.int_month
+ORDER BY ben.str_name_person;");
 
             if ($statement->execute()) {
                 $rs = $statement->fetchAll(PDO::FETCH_OBJ);
@@ -270,6 +276,8 @@ LIMIT 20");
         <th style="font-weight: bold; text-align: center;">NIS</th>
         <th style="font-weight: bold; text-align: center;">Beneficiary</th>
         <th style="font-weight: bold; text-align: center;">Total of payments</th>
+        <th style="font-weight: bold; text-align: center;">Month</th>
+        <th style="font-weight: bold; text-align: center;">Payment value</th>
        </tr>
        <br/>
      </thead>
@@ -280,6 +288,8 @@ LIMIT 20");
 <td>'.$payment->str_nis.'</td>
 <td>'.$payment->str_name_person.'</td>
 <td>'.$payment->payments_number.'</td>
+<td>'.$payment->int_month.'</td>
+<td>'.$payment->db_value.'</td>
 </tr>';
                 }
 
