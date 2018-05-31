@@ -6,8 +6,8 @@
  * Time: 21:17
  */
 
-require_once("../db/conexao.php");
-require_once("../classes/action.php");
+require_once "db/conexao.php";
+require_once "classes/action.php";
 
 class actionDAO
 {
