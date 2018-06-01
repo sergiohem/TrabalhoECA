@@ -1,6 +1,15 @@
 <?php
 
 require_once "classes/template.php";
+require_once "db/beneficiaryDAO.php";
+require_once "db/paymentDAO.php";
+
+
+$object = new beneficiaryDAO();
+$totalBeneficiarios = $object->totalBeneficiarios();
+
+$object = new paymentDAO();
+$totalPagamentos = $object->totalPagamentos();
 
 $template = new Template();
 
@@ -9,6 +18,8 @@ $template->header();
 $template->sidebar();
 
 $template->mainpanel();
+
+
 
 ?>
 
@@ -27,7 +38,7 @@ $template->mainpanel();
                             <div class="col-xs-7">
                                 <div class="numbers">
                                     <p>Payments</p>
-                                    000
+                                    R$<?= $totalPagamentos ?>
                                 </div>
                             </div>
                         </div>
@@ -102,7 +113,7 @@ $template->mainpanel();
                             <div class="col-xs-7">
                                 <div class="numbers">
                                     <p>Beneficiaries</p>
-                                    00
+                                    <?= $totalBeneficiarios ?>
                                 </div>
                             </div>
                         </div>

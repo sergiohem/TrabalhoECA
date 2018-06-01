@@ -27,6 +27,22 @@ class paymentDAO
         }
     }
 
+    public function totalPagamentos()
+    {
+        global $pdo;
+        try {
+            $statement = $pdo->prepare("SELECT DISTINCT SUM(db_value) FROM tb_payments");
+            if ($statement->execute()) {
+                $rs = $statement->fetch(PDO::FETCH_COLUMN);
+                return $rs;
+            } else {
+                throw new PDOException("Erro: Não foi possível executar a declaração sql");
+            }
+        } catch (PDOException $erro) {
+            return "Erro: " . $erro->getMessage();
+        }
+    }
+
     public function salvar($payment){
         global $pdo;
 

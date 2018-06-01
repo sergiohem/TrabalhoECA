@@ -6,8 +6,8 @@
  * Time: 14:12
  */
 
-require_once("../db/conexao.php");
-require_once("../classes/beneficiary.php");
+require_once("conexao.php");
+require_once("classes/beneficiary.php");
 
 class beneficiaryDAO
 {
@@ -19,6 +19,22 @@ class beneficiaryDAO
             $statement->bindValue(":id", $beneficiary->getIdBeneficiary());
             if ($statement->execute()) {
                 return "Registro foi excluído com êxito";
+            } else {
+                throw new PDOException("Erro: Não foi possível executar a declaração sql");
+            }
+        } catch (PDOException $erro) {
+            return "Erro: " . $erro->getMessage();
+        }
+    }
+
+    public function totalBeneficiarios()
+    {
+        global $pdo;
+        try {
+            $statement = $pdo->prepare("SELECT DISTINCT COUNT(id_beneficiaries) FROM tb_beneficiaries");
+            if ($statement->execute()) {
+                $rs = $statement->fetch(PDO::FETCH_COLUMN);
+                return $rs;
             } else {
                 throw new PDOException("Erro: Não foi possível executar a declaração sql");
             }
