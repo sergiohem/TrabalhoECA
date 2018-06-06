@@ -18,6 +18,8 @@ class payment
     private $source;
     private $file;
     private $value;
+    private $month;
+    private $year;
 
     /**
      * payment constructor.
@@ -31,8 +33,10 @@ class payment
      * @param $source
      * @param $file
      * @param $value
+     * @param $month
+     * @param $year
      */
-    public function __construct($idPayment, $city, $function, $subfunction, $program, $action, $beneficiary, $source, $file, $value)
+    public function __construct($idPayment, $city, $function, $subfunction, $program, $action, $beneficiary, $source, $file, $value, $month, $year)
     {
         $this->idPayment = $idPayment;
         $this->city = $city;
@@ -44,6 +48,8 @@ class payment
         $this->source = $source;
         $this->file = $file;
         $this->value = $value;
+        $this->month = $month;
+        $this->year = $year;
     }
 
     /**
@@ -57,7 +63,7 @@ class payment
     /**
      * @param mixed $idPayment
      */
-    public function setIdPayment($idPayment)
+    public function setIdPayment($idPayment): void
     {
         $this->idPayment = $idPayment;
     }
@@ -73,7 +79,7 @@ class payment
     /**
      * @param mixed $city
      */
-    public function setCity($city)
+    public function setCity($city): void
     {
         $this->city = $city;
     }
@@ -89,7 +95,7 @@ class payment
     /**
      * @param mixed $function
      */
-    public function setFunction($function)
+    public function setFunction($function): void
     {
         $this->function = $function;
     }
@@ -105,7 +111,7 @@ class payment
     /**
      * @param mixed $subfunction
      */
-    public function setSubfunction($subfunction)
+    public function setSubfunction($subfunction): void
     {
         $this->subfunction = $subfunction;
     }
@@ -121,7 +127,7 @@ class payment
     /**
      * @param mixed $program
      */
-    public function setProgram($program)
+    public function setProgram($program): void
     {
         $this->program = $program;
     }
@@ -137,7 +143,7 @@ class payment
     /**
      * @param mixed $action
      */
-    public function setAction($action)
+    public function setAction($action): void
     {
         $this->action = $action;
     }
@@ -153,7 +159,7 @@ class payment
     /**
      * @param mixed $beneficiary
      */
-    public function setBeneficiary($beneficiary)
+    public function setBeneficiary($beneficiary): void
     {
         $this->beneficiary = $beneficiary;
     }
@@ -169,7 +175,7 @@ class payment
     /**
      * @param mixed $source
      */
-    public function setSource($source)
+    public function setSource($source): void
     {
         $this->source = $source;
     }
@@ -185,7 +191,7 @@ class payment
     /**
      * @param mixed $file
      */
-    public function setFile($file)
+    public function setFile($file): void
     {
         $this->file = $file;
     }
@@ -201,8 +207,46 @@ class payment
     /**
      * @param mixed $value
      */
-    public function setValue($value)
+    public function setValue($value): void
     {
         $this->value = $value;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getMonth()
+    {
+        return $this->month;
+    }
+
+    /**
+     * @param mixed $month
+     */
+    public function setMonth($month): void
+    {
+        $this->month = $month;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getYear()
+    {
+        return $this->year;
+    }
+
+    /**
+     * @param mixed $year
+     */
+    public function setYear($year): void
+    {
+        $this->year = $year;
+    }
+
+
+
+
+
+
 }

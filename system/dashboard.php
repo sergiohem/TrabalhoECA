@@ -10,6 +10,8 @@ $totalBeneficiarios = $object->totalBeneficiarios();
 
 $object = new paymentDAO();
 $totalPagamentos = $object->totalPagamentos();
+$totalPagamentosUltimoMes = $object->totalPagamentosUltimoMes();
+$mediaPagamentosUltimoMes = $object->mediaPagamentosUltimoMes();
 
 $template = new Template();
 
@@ -38,7 +40,7 @@ $template->mainpanel();
                             <div class="col-xs-7">
                                 <div class="numbers">
                                     <p>Payments</p>
-                                    R$<?= $totalPagamentos ?>
+                                    <?= $totalPagamentos ?>
                                 </div>
                             </div>
                         </div>
@@ -63,7 +65,7 @@ $template->mainpanel();
                             <div class="col-xs-7">
                                 <div class="numbers">
                                     <p>Payments</p>
-                                    R$0,00
+                                    R$<?= $totalPagamentosUltimoMes ?>
                                 </div>
                             </div>
                         </div>
@@ -88,7 +90,7 @@ $template->mainpanel();
                             <div class="col-xs-7">
                                 <div class="numbers">
                                     <p>Average</p>
-                                    R$0,00
+                                    R$<?= $mediaPagamentosUltimoMes ?>
                                 </div>
                             </div>
                         </div>

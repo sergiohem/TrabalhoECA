@@ -31,7 +31,39 @@ class paymentDAO
     {
         global $pdo;
         try {
-            $statement = $pdo->prepare("SELECT DISTINCT SUM(db_value) FROM tb_payments");
+            $statement = $pdo->prepare("SELECT DISTINCT Count(id_payment) FROM tb_payments");
+            if ($statement->execute()) {
+                $rs = $statement->fetch(PDO::FETCH_COLUMN);
+                return $rs;
+            } else {
+                throw new PDOException("Erro: Não foi possível executar a declaração sql");
+            }
+        } catch (PDOException $erro) {
+            return "Erro: " . $erro->getMessage();
+        }
+    }
+    public function totalPagamentosUltimoMes()
+    {
+        global $pdo;
+        try {
+            $statement = $pdo->prepare("SELECT DISTINCT SUM(db_value) FROM tb_payments WHERE int_month = :mh");
+            $statement->bindValue(":mh", date('m', strtotime('-1 month')));
+            if ($statement->execute()) {
+                $rs = $statement->fetch(PDO::FETCH_COLUMN);
+                return $rs;
+            } else {
+                throw new PDOException("Erro: Não foi possível executar a declaração sql");
+            }
+        } catch (PDOException $erro) {
+            return "Erro: " . $erro->getMessage();
+        }
+    }
+    public function mediaPagamentosUltimoMes()
+    {
+        global $pdo;
+        try {
+            $statement = $pdo->prepare("SELECT DISTINCT AVG(db_value) FROM tb_payments WHERE int_month = :mh");
+            $statement->bindValue(":mh", date('m', strtotime('-1 month')));
             if ($statement->execute()) {
                 $rs = $statement->fetch(PDO::FETCH_COLUMN);
                 return $rs;
@@ -50,10 +82,10 @@ class paymentDAO
 
             if ($payment->getIdPayment() != "") {
                 $statement = $pdo->prepare("UPDATE tb_payments SET tb_city_id_city = :idCity, tb_functions_id_function = :idFunction, tb_subfunctions_id_subfunction = :idSubfunction, 
-                tb_program_id_program = :idProgram, tb_action_id_action = :idAction, tb_beneficiaries_id_beneficiaries = :idBeneficiary, tb_source_id_source = :idSource, tb_files_id_file = :idFile, db_value = :dbValue WHERE id_payment = :idPayment");
+                tb_program_id_program = :idProgram, tb_action_id_action = :idAction, tb_beneficiaries_id_beneficiaries = :idBeneficiary, tb_source_id_source = :idSource, tb_files_id_file = :idFile, db_value = :dbValue,int_month = :mh, int_year = :yr WHERE id_payment = :idPayment");
                 $statement->bindValue(":idPayment", $payment->getIdPayment());
             } else {
-                $statement = $pdo->prepare("INSERT INTO tb_payments (tb_city_id_city, tb_functions_id_function, tb_subfunctions_id_subfunction, tb_program_id_program, tb_action_id_action, tb_beneficiaries_id_beneficiaries, tb_source_id_source, tb_files_id_file, db_value) VALUES (:idCity, :idFunction, :idSubfunction, :idProgram, :idAction, :idBeneficiary, :idSource, :idFile, :dbValue)");
+                $statement = $pdo->prepare("INSERT INTO tb_payments (tb_city_id_city, tb_functions_id_function, tb_subfunctions_id_subfunction, tb_program_id_program, tb_action_id_action, tb_beneficiaries_id_beneficiaries, tb_source_id_source, tb_files_id_file, db_value,int_month,int_year) VALUES (:idCity, :idFunction, :idSubfunction, :idProgram, :idAction, :idBeneficiary, :idSource, :idFile, :dbValue,:mh,:yr)");
             }
             $statement->bindValue(":idCity", $payment->getCity());
             $statement->bindValue(":idFunction", $payment->getFunction());
@@ -64,6 +96,8 @@ class paymentDAO
             $statement->bindValue(":idSource", $payment->getSource());
             $statement->bindValue(":idFile", $payment->getFile());
             $statement->bindValue(":dbValue", $payment->getValue());
+            $statement->bindValue(":mh", $payment->getMonth());
+            $statement->bindValue(":yr", $payment->getYear());
             if ($statement->execute()) {
                 if ($statement->rowCount() > 0) {
                     return "Dados cadastrados com sucesso!";
@@ -83,7 +117,7 @@ class paymentDAO
         global $pdo;
         try {
             $statement = $pdo->prepare("SELECT id_payment, tb_city_id_city, tb_functions_id_function, tb_subfunctions_id_subfunction,
-            tb_program_id_program, tb_action_id_action, tb_beneficiaries_id_beneficiaries, tb_source_id_source, tb_files_id_file, db_value FROM tb_payments WHERE id_payment = :idPayment");
+            tb_program_id_program, tb_action_id_action, tb_beneficiaries_id_beneficiaries, tb_source_id_source, tb_files_id_file, db_value, int_month, int_year FROM tb_payments WHERE id_payment = :idPayment");
             $statement->bindValue(":idPayment", $payment->getIdPayment());
             if ($statement->execute()) {
                 $rs = $statement->fetch(PDO::FETCH_OBJ);
@@ -97,6 +131,8 @@ class paymentDAO
                 $payment->setSource($rs->tb_source_id_source);
                 $payment->setFile($rs->tb_files_id_file);
                 $payment->setValue($rs->db_value);
+                $payment->setMonth($rs->int_month);
+                $payment->setYear($rs->int_year);
                 return $payment;
             } else {
                 throw new PDOException("Erro: Não foi possível executar a declaração sql");
@@ -143,7 +179,7 @@ class paymentDAO
 
         /* Instrução de consulta para paginação com MySQL */
         $sql = "SELECT id_payment, tb_city_id_city, tb_functions_id_function, tb_subfunctions_id_subfunction,
-            tb_program_id_program, tb_action_id_action, tb_beneficiaries_id_beneficiaries, tb_source_id_source, tb_files_id_file, db_value FROM tb_payments LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
+            tb_program_id_program, tb_action_id_action, tb_beneficiaries_id_beneficiaries, tb_source_id_source, tb_files_id_file, db_value, int_month, int_year FROM tb_payments LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
         $statement = $pdo->prepare($sql);
         $statement->execute();
         $dados = $statement->fetchAll(PDO::FETCH_OBJ);
@@ -192,6 +228,8 @@ class paymentDAO
         <th>Source</th>
         <th>File</th>
         <th>Value</th>
+        <th>Month</th>
+        <th>Year</th>
         <th colspan='2'>Options</th>
        </tr>
      </thead>
@@ -207,6 +245,8 @@ class paymentDAO
         <td>$var->tb_source_id_source</td>
         <td>$var->tb_files_id_file</td>
         <td>$var->db_value</td>
+        <td>$var->int_month</td>
+        <td>$var->int_year</td>
         <td><a href='?act=upd&idPayment=$var->id_payment'><i class='ti-reload'></i></a></td>
         <td><a href='?act=del&idPayment=$var->id_payment'><i class='ti-close'></i></a></td>
        </tr>";

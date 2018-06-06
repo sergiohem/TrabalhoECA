@@ -32,6 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $source = (isset($_POST["source"]) && $_POST["source"] != null) ? $_POST["source"] : "";
     $file = (isset($_POST["file"]) && $_POST["file"] != null) ? $_POST["file"] : "";
     $dbValue = (isset($_POST["dbValue"]) && $_POST["dbValue"] != null) ? $_POST["dbValue"] : "";
+    $month = (isset($_POST["month"]) && $_POST["month"] != null) ? $_POST["month"] : "";
+    $year = (isset($_POST["year"]) && $_POST["year"] != null) ? $_POST["year"] : "";
 } else if (!isset($idPayment)) {
     // Se não se não foi setado nenhum valor para variável $idPayment
     $idPayment = (isset($_GET["idPayment"]) && $_GET["idPayment"] != null) ? $_GET["idPayment"] : "";
@@ -44,11 +46,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $source = null;
     $file = null;
     $dbValue = null;
+    $month = null;
+    $year = null;
 }
 
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $idPayment != "") {
 
-    $payment = new payment($idPayment, '', '', '', '', '', '', '', '', '');
+    $payment = new payment($idPayment, '', '', '', '', '', '', '', '', '','','');
 
     $resultado = $object->atualizar($action);
     $city = $resultado->getCity();
@@ -60,14 +64,16 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $idPayment != "") {
     $source = $resultado->getSource();
     $file = $resultado->getFile();
     $dbValue = $resultado->getValue();
+    $month = $resultado->getMonth();
+    $year = $resultado->getYear();
 }
 
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $city != "" && $function != "" && $subfunction != "" && $program != "" && $action != ""
-    && $beneficiary != "" && $source != "" && $file != "" && $dbValue != "") {
+    && $beneficiary != "" && $source != "" && $file != "" && $dbValue != "" && $month != null && $year != null) {
 
     $dbValue = doubleval($dbValue);
 
-    $payment = new payment($idPayment, $city, $function, $subfunction, $program, $action, $beneficiary, $source, $file, $dbValue);
+    $payment = new payment($idPayment, $city, $function, $subfunction, $program, $action, $beneficiary, $source, $file, $dbValue, $month, $year);
     $msg = $object->salvar($payment);
     $idPayment = null;
     $city = null;
@@ -79,10 +85,12 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $city != "" && $fun
     $source = null;
     $file = null;
     $dbValue = null;
+    $month = null;
+    $year = null;
 }
 
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $idPayment != "") {
-    $payment = new payment($idPayment, '', '', '', '', '', '', '', '', '');
+    $payment = new payment($idPayment, '', '', '', '', '', '', '', '', '', '','');
     $msg = $object->remover($payment);
     $idPayment = null;
 }
@@ -262,6 +270,14 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $idPayment != "") {
                             Value:
                             <input type="text" size="15" name="dbValue" value="<?php
                             echo (isset($dbValue) && ($dbValue != null || $dbValue != "")) ? $dbValue : '';
+                            ?>"/>
+                            Month:
+                            <input type="text" size="2" name="month" value="<?php
+                            echo (isset($month) && ($month != null || $month != "")) ? $month : '';
+                            ?>"/>
+                            Year:
+                            <input type="text" size="4" name="year" value="<?php
+                            echo (isset($year) && ($year != null || $year != "")) ? $year : '';
                             ?>"/>
                             <input type="submit" VALUE="Register"/>
                             <hr>
