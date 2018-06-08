@@ -6,8 +6,7 @@
  * Time: 09:49
  */
 
-require_once("PHPlot/phplot/phplot.php");
-
+require_once("../vendor/autoload.php");
 require_once("../db/conexao.php");
 
 #Instancia o objeto e setando o tamanho do grafico na tela

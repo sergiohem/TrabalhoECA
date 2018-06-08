@@ -6,7 +6,7 @@
  * Time: 18:56
  */
 
-require_once('TCPDF/tcpdf.php');
+require_once('../vendor/autoload.php');
 require_once("../db/reportDAO.php");
 
 

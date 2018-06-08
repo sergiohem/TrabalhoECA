@@ -6,8 +6,8 @@
  * Time: 09:49
  */
 
-require_once("PHPlot/phplot/phplot.php");
-
+require_once("../vendor/autoload.php");
+require('../vendor/mem_image.php');
 require_once("../db/conexao.php");
 
 #Instancia o objeto e setando o tamanho do grafico na tela
@@ -204,6 +204,12 @@ $plot->SetXTickPos('none');
 # Turn on Y Data Labels: Both total and segment labels:
 $plot->SetYDataLabelPos('plotstack');
 
-$plot->SetOutputFile('graphic2.jpg');
-
+if (isset($_GET["pdf"]) && $_GET["pdf"] == 1) {
+    $plot->SetPrintImage(false);
+}
 $plot->DrawGraph();
+
+$pdf = new PDF_MemImage();
+$pdf->AddPage();
+$pdf->GDImage($plot->img,30,20,140);
+$pdf->Output('generate.pdf','I');

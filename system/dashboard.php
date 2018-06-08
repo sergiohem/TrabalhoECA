@@ -149,7 +149,7 @@ $template->mainpanel();
                             </div>
                             <hr>
                             <div class="stats">
-                                <i class="ti-info-alt"></i> Historic Serie | <i class="ti-export"></i><a href="reportPDF/genericReportPDF.php?report=graphic1"> Export PDF</a>
+                                <i class="ti-info-alt"></i> Historic Serie | <i class="ti-export"></i><a href="graphics/graphic1.php?pdf=1" target="_blank">Export PDF</a>
                             </div>
                         </div>
                     </div>
@@ -170,7 +170,7 @@ $template->mainpanel();
 
                         <div class="footer">
                             <div class="stats">
-                                <i class="ti-timer"></i> Total | <i class="ti-export"></i><a> Export PDF</a>
+                                <i class="ti-timer"></i> Total | <i class="ti-export"></i><a href="graphics/graphic2.php?pdf=1" target="_blank">Export PDF</a>
                             </div>
                         </div>
                     </div>
@@ -192,7 +192,7 @@ $template->mainpanel();
                             </div>
                             <hr>
                             <div class="stats">
-                                <i class="ti-check"></i> Last Month | <i class="ti-export"></i><a> Export PDF</a>
+                                <i class="ti-check"></i> Last Month | <i class="ti-export"></i><a href="graphics/graphic3.php?pdf=1" target="_blank">Export PDF</a>
                             </div>
                         </div>
                     </div>

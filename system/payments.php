@@ -272,11 +272,11 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $idPayment != "") {
                             echo (isset($dbValue) && ($dbValue != null || $dbValue != "")) ? $dbValue : '';
                             ?>"/>
                             Month:
-                            <input type="text" size="2" name="month" value="<?php
+                            <input type="text" size="2" name="month" maxlength="2" value="<?php
                             echo (isset($month) && ($month != null || $month != "")) ? $month : '';
                             ?>"/>
                             Year:
-                            <input type="text" size="4" name="year" value="<?php
+                            <input type="text" size="4" name="year" maxlength="4" value="<?php
                             echo (isset($year) && ($year != null || $year != "")) ? $year : '';
                             ?>"/>
                             <input type="submit" VALUE="Register"/>

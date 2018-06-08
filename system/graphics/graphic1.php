@@ -6,17 +6,17 @@
  * Time: 09:49
  */
 
-require_once("PHPlot/phplot/phplot.php");
-
+require_once("../vendor/autoload.php");
+require('../vendor/mem_image.php');
 require_once("../db/conexao.php");
 
 #Instancia o objeto e setando o tamanho do grafico na tela
-$grafico = new PHPlot(500,300);
+$plot = new PHPlot(500,300);
 
 #Indicamos o títul do gráfico e o título dos dados no eixo X e Y do mesmo
-//$grafico->SetTitle("Total of Beneficiaries");
-$grafico->SetXTitle("Month/Year");
-$grafico->SetYTitle("Beneficiaries");
+//$plot->SetTitle("Total of Beneficiaries");
+$plot->SetXTitle("Month/Year");
+$plot->SetYTitle("Beneficiaries");
 
 //$id = $_GET['id'];
 
@@ -46,12 +46,19 @@ if(isset($resultado)) {
     $data[]=[null,null];
 }
 
-//$grafico->SetDefaultTTFont('../assets/fonts/themify.ttf');
-
-$grafico->SetDataValues($data);
+//$plot->SetDefaultTTFont('../assets/fonts/themify.ttf');
+$plot->SetDataValues($data);
 
 #Neste caso, usariamos o gráfico em barras
-$grafico->SetPlotType("lines");
+$plot->SetPlotType("lines");
 
 #Exibimos o gráfico
-$grafico->DrawGraph();
+if (isset($_GET["pdf"]) && $_GET["pdf"] == 1) {
+    $plot->SetPrintImage(false);
+}
+$plot->DrawGraph();
+
+$pdf = new PDF_MemImage();
+$pdf->AddPage();
+$pdf->GDImage($plot->img,30,20,140);
+$pdf->Output('generate.pdf','I');
