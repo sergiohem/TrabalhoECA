@@ -11,7 +11,7 @@ require('../vendor/mem_image.php');
 require_once("../db/conexao.php");
 
 #Instancia o objeto e setando o tamanho do grafico na tela
-$plot = new PHPlot(500,300);
+$plot = new PHPlot(900,400);
 
 #Indicamos o títul do gráfico e o título dos dados no eixo X e Y do mesmo
 //$plot->SetTitle("Total of Beneficiaries");
@@ -21,7 +21,7 @@ $plot->SetYTitle("Beneficiaries");
 //$id = $_GET['id'];
 
 $query = "SELECT 
-    pay.int_month, pay.int_year, count(ben.id_beneficiaries) AS beneficiaries_number
+    concat(pay.int_month, \"/\", pay.int_year) AS month_year, count(ben.id_beneficiaries) AS beneficiaries_number
 FROM
     db_eca.tb_beneficiaries AS ben
         JOIN
@@ -40,7 +40,7 @@ $data = array();
 
 if(isset($resultado)) {
     foreach ($resultado as $r){
-        $data[] = [$r['int_month'], $r['beneficiaries_number']];
+        $data[] = [$r['month_year'], $r['beneficiaries_number']];
     }
 } else {
     $data[]=[null,null];

@@ -9,27 +9,30 @@
 require_once "db/conexao.php";
 
 session_start();
-$login = $_POST['usuario'];
-$passwd = $_POST['senha'];
+$login = $_POST['user'];
+$passwd = $_POST['pwd'];
 
 try {
-    $statement = $pdo->prepare("SELECT Usuario, Senha, Nome FROM Usuario WHERE Usuario = :login and Senha = :senha");
-    $statement->bindValue(":login", $login);
-    $statement->bindValue(":senha", sha1($passwd));
+    $statement = $pdo->prepare("SELECT str_name, str_username, str_password, str_type FROM tb_user WHERE str_username = :username and str_password = :password");
+    $statement->bindValue(":username", $login);
+    $statement->bindValue(":password", sha1($passwd));
     if ($statement->execute()) {
         $rs = $statement->fetch(PDO::FETCH_OBJ);
-        $usuario = $rs->Usuario;
-        $nome = $rs->Nome;
-        $senha = $rs->Senha;
-        if( $usuario!=null and $senha != null)
+        $username = $rs->str_username;
+        $name = $rs->str_name;
+        $type = $rs->str_type;
+        $password = $rs->str_password;
+        if($username != null and $password != null and $type != null)
         {
-            $_SESSION['login'] = $nome;
-            $_SESSION['senha'] = $senha;
+            $_SESSION['nameuser'] = $name;
+            $_SESSION['password'] = $password;
+            $_SESSION['typeUser'] = $type;
             header('location:index.php');
         }
         else{
-            unset ($_SESSION['login']);
-            unset ($_SESSION['senha']);
+            unset ($_SESSION['nameuser']);
+            unset ($_SESSION['password']);
+            unset ($_SESSION['typeUser']);
             header('location:index.php');
 
         }

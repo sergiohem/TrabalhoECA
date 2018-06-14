@@ -36,8 +36,16 @@ class Template
     <!--  Fonts and icons     -->
     <link href='http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css' rel='stylesheet'>
 <link href='https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet' type='text/css'>
-<link href='assets/css/themify-icons.css' rel='stylesheet'>
-
+<link href='assets/css/themify-icons.css' rel='stylesheet'>";
+session_start();
+        if ((!isset ($_SESSION['nameuser']) == true) and (!isset ($_SESSION['password']) == true)) {
+            unset($_SESSION['nameuser']);
+            unset($_SESSION['password']);
+            unset($_SESSION['typeUser']);
+            header('location:login.php');
+        }
+        $logado = $_SESSION['nameuser'];
+        echo "
 </head>
 <body>";
 
@@ -80,6 +88,11 @@ class Template
 
     function sidebar()
     {
+        $typeUser = "";
+        if (isset ($_SESSION['typeUser']) == true) {
+            $typeUser = $_SESSION['typeUser'];
+        }
+
         echo "<div class=\"wrapper\">
         <div class=\"sidebar\" data-background-color=\"white\" data-active-color=\"danger\">
 
@@ -101,6 +114,16 @@ class Template
                         <p>Dashboard</p>
                     </a>
                 </li>
+                ";
+        if (!empty($typeUser) && $typeUser == "Admin"){
+            echo "<li>
+                    <a href=\"users.php\">
+                        <i class=\"ti-user\"></i>
+                        <p>Users</p>
+                    </a>
+                </li>";
+        }
+            echo "
                 <li>
                     <a href=\"actions.php\">
                         <i class=\"ti-check\"></i>
@@ -115,7 +138,7 @@ class Template
                 </li>
                 <li>
                     <a href=\"programs.php\">
-                        <i class=\"ti-check\"></i>
+                        <i class=\"ti-folder\"></i>
                         <p>Programs</p>
                     </a>
                 </li>
@@ -142,25 +165,25 @@ class Template
                         <i class=\"ti-map\"></i>
                         <p>Cities</p>
                     <a href=\"regions.php\">
-                        <i class=\"ti-check\"></i>
+                        <i class=\"ti-map\"></i>
                         <p>Regions</p>
                     </a>
                 </li>
                 <li>
                     <a href=\"sources.php\">
-                        <i class=\"ti-check\"></i>
+                        <i class=\"ti-flag\"></i>
                         <p>Sources</p>
                     </a>
                 </li>
                 <li>
                     <a href=\"states.php\">
-                        <i class=\"ti-check\"></i>
+                        <i class=\"ti-map\"></i>
                         <p>States</p>
                     </a>
                 </li>
                 <li>
                     <a href=\"subFunctions.php\">
-                        <i class=\"ti-check\"></i>
+                        <i class=\"ti-package\"></i>
                         <p>Subfunctions</p>
                     </a>
                 </li>
@@ -189,36 +212,16 @@ class Template
                         <span class=\"icon-bar bar3\"></span>
                     </button>
                     <a class=\"navbar-brand\" href=\"#\">General Information</a>
+                    
                 </div>
                 <div class=\"collapse navbar-collapse\">
                     <ul class=\"nav navbar-nav navbar-right\">
-                        <!--li>
-                            <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">
-                                <i class=\"ti-panel\"></i>
-                                <p>Stats</p>
+						<li>
+                            <a href='sair.php'>
+								<i class='ti-'></i>
+								<p>Exit</p>
                             </a>
                         </li>
-                        <li class=\"dropdown\">
-                            <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">
-                                <i class=\"ti-bell\"></i>
-                                <p class=\"notification\">5</p>
-                                <p>Notifications</p>
-                                <b class=\"caret\"></b>
-                            </a>
-                            <ul class=\"dropdown-menu\">
-                                <li><a href=\"#\">Notification 1</a></li>
-                                <li><a href=\"#\">Notification 2</a></li>
-                                <li><a href=\"#\">Notification 3</a></li>
-                                <li><a href=\"#\">Notification 4</a></li>
-                                <li><a href=\"#\">Another notification</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href=\"#\">
-                                <i class=\"ti-settings\"></i>
-                                <p>Settings</p>
-                            </a>
-                        </li-->
                     </ul>
 
                 </div>

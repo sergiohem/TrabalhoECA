@@ -10,9 +10,10 @@ require_once("../vendor/autoload.php");
 require('../vendor/mem_image.php');
 require_once("../db/conexao.php");
 
+$monthSelected = $_GET['selectMonth'];
 
 $query = "SELECT 
-    count(ben.id_beneficiaries) AS beneficiaries_number, concat(pay.int_month, \"/\", pay.int_year) AS month_year, st.str_uf
+    sum(pay.db_value) AS payments_total, concat(pay.int_month, \"/\", pay.int_year) AS month_year, st.str_uf
 FROM
     tb_beneficiaries AS ben
         JOIN
@@ -21,9 +22,11 @@ FROM
     tb_city AS city ON pay.tb_city_id_city = city.id_city
         RIGHT JOIN
     tb_state AS st ON city.tb_state_id_state = st.id_state
-GROUP BY pay.int_month, st.id_state
-order by pay.int_year, pay.int_month";
+WHERE pay.int_month = :monthSelected
+GROUP BY st.id_state
+order by st.str_uf";
 $statement = $pdo->prepare($query);
+$statement->bindValue(":monthSelected", $monthSelected);
 $statement->execute();
 $rs = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -31,7 +34,7 @@ foreach ($rs as $value) {
     $resultado[] = $value;
 }
 
-$months = array();
+$states = array();
 $data = array();
 
 $acre = array('AC');
@@ -64,140 +67,136 @@ $tocantins = array('TO');
 
 
 if(isset($resultado)) {
-    foreach ($resultado as $r){
-        if (!in_array($r['month_year'], $months) && $r['month_year'] != null && $r['month_year'] != ''){
-            array_push($months, $r['month_year']);
-        }
-    }
 
     foreach ($resultado as $r){
-        if ($r['month_year'] != null && $r['month_year'] != ''){
             switch ($r['str_uf']) {
                 case "AC":
-                    array_push($acre, $r['beneficiaries_number']);
+                    array_push($acre, $r['payments_total']);
                     break;
                 case "AL":
-                    array_push($alagoas, $r['beneficiaries_number']);
+                    array_push($alagoas, $r['payments_total']);
                     break;
                 case "AM":
-                    array_push($amazonas, $r['beneficiaries_number']);
+                    array_push($amazonas, $r['payments_total']);
                     break;
                 case "AP":
-                    array_push($amapa, $r['beneficiaries_number']);
+                    array_push($amapa, $r['payments_total']);
                     break;
                 case "BA":
-                    array_push($bahia, $r['beneficiaries_number']);
+                    array_push($bahia, $r['payments_total']);
                     break;
                 case "CE":
-                    array_push($ceara, $r['beneficiaries_number']);
+                    array_push($ceara, $r['payments_total']);
                     break;
                 case "DF":
-                    array_push($distrito, $r['beneficiaries_number']);
+                    array_push($distrito, $r['payments_total']);
                     break;
                 case "ES":
-                    array_push($esanto, $r['beneficiaries_number']);
+                    array_push($esanto, $r['payments_total']);
                     break;
                 case "GO":
-                    array_push($goias, $r['beneficiaries_number']);
+                    array_push($goias, $r['payments_total']);
                     break;
                 case "MA":
-                    array_push($maranhao, $r['beneficiaries_number']);
+                    array_push($maranhao, $r['payments_total']);
                     break;
                 case "MG":
-                    array_push($minas, $r['beneficiaries_number']);
+                    array_push($minas, $r['payments_total']);
                     break;
                 case "MS":
-                    array_push($mgrossosul, $r['beneficiaries_number']);
+                    array_push($mgrossosul, $r['payments_total']);
                     break;
                 case "MT":
-                    array_push($mgrosso, $r['beneficiaries_number']);
+                    array_push($mgrosso, $r['payments_total']);
                     break;
                 case "PA":
-                    array_push($para, $r['beneficiaries_number']);
+                    array_push($para, $r['payments_total']);
                     break;
                 case "PB":
-                    array_push($paraiba, $r['beneficiaries_number']);
+                    array_push($paraiba, $r['payments_total']);
                     break;
                 case "PE":
-                    array_push($pernambuco, $r['beneficiaries_number']);
+                    array_push($pernambuco, $r['payments_total']);
                     break;
                 case "PI":
-                    array_push($piaui, $r['beneficiaries_number']);
+                    array_push($piaui, $r['payments_total']);
                     break;
                 case "PR":
-                    array_push($parana, $r['beneficiaries_number']);
+                    array_push($parana, $r['payments_total']);
                     break;
                 case "RJ":
-                    array_push($rio, $r['beneficiaries_number']);
+                    array_push($rio, $r['payments_total']);
                     break;
                 case "RN":
-                    array_push($rgnorte, $r['beneficiaries_number']);
+                    array_push($rgnorte, $r['payments_total']);
                     break;
                 case "RO":
-                    array_push($rondonia, $r['beneficiaries_number']);
+                    array_push($rondonia, $r['payments_total']);
                     break;
                 case "RR":
-                    array_push($roraima, $r['beneficiaries_number']);
+                    array_push($roraima, $r['payments_total']);
                     break;
                 case "RS":
-                    array_push($rgsul, $r['beneficiaries_number']);
+                    array_push($rgsul, $r['payments_total']);
                     break;
                 case "SC":
-                    array_push($scantarina, $r['beneficiaries_number']);
+                    array_push($scantarina, $r['payments_total']);
                     break;
                 case "SE":
-                    array_push($sergipe, $r['beneficiaries_number']);
+                    array_push($sergipe, $r['payments_total']);
                     break;
                 case "SP":
-                    array_push($spaulo, $r['beneficiaries_number']);
+                    array_push($spaulo, $r['payments_total']);
                     break;
                 case "TO":
-                    array_push($tocantins, $r['beneficiaries_number']);
+                    array_push($tocantins, $r['payments_total']);
                     break;
                 default:
                     break;
             }
-        }
     }
 
-    $data = array($acre, $alagoas, $amazonas, $amapa, $bahia,
+    $states = array($acre, $alagoas, $amazonas, $amapa, $bahia,
         $ceara, $distrito, $esanto, $goias, $maranhao, $minas,
         $mgrossosul, $mgrosso, $para, $paraiba, $pernambuco, $piaui,
         $parana, $rio, $rgnorte, $rondonia, $roraima, $rgsul,
         $scantarina, $sergipe, $spaulo, $tocantins);
 
+    foreach ($states as $st){
+        if (isset($st[1])){
+            array_push($data, $st);
+        }
+    }
+
 }
 
-//echo "<pre>";
-//print_r($months);
-//echo "/<pre>";
-
-$plot = new PHPlot(900, 400);
+$plot = new PHPlot(900,500);
 $plot->SetImageBorderType('plain');
 
-$plot->SetPlotType('stackedbars');
-$plot->SetDataType('text-data');
+$plot->SetPlotType('pie');
+$plot->SetDataType('text-data-single');
 $plot->SetDataValues($data);
 
-//$plot->SetTitle('Candy Sales by Month and Product');
-$plot->SetYTitle('Number of beneficiaries');
+# Set enough different colors;
+$plot->SetDataColors(array('red', 'green', 'blue', 'yellow', 'cyan',
+    'magenta', 'brown', 'lavender', 'pink',
+    'gray', 'orange', 'black', 'gold'));
 
-# No shading:
-$plot->SetShading(0);
+//# Main plot title:
+//$plot->SetTitle("World Gold Production, 1990\n(1000s of Troy Ounces)");
 
-$plot->SetLegend($months);
-# Make legend lines go bottom to top, like the bar segments (PHPlot > 5.4.0)
-$plot->SetLegendReverse(True);
-
-$plot->SetXTickLabelPos('none');
-$plot->SetXTickPos('none');
-
-# Turn on Y Data Labels: Both total and segment labels:
-$plot->SetYDataLabelPos('plotstack');
+# Build a legend from our data array.
+# Each call to SetLegend makes one line as "label: value".
+foreach ($data as $row)
+    $plot->SetLegend(implode(': ', $row));
+# Place the legend in the upper left corner:
+$plot->SetLegendPixels(5, 5);
+$plot->SetLegendPosition(0.5, 0, 'title', 0.5, 1);
 
 if (isset($_GET["pdf"]) && $_GET["pdf"] == 1) {
     $plot->SetPrintImage(false);
 }
+
 $plot->DrawGraph();
 
 $pdf = new PDF_MemImage();

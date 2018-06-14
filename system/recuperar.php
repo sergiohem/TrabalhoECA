@@ -12,26 +12,24 @@
 </head>
 <body><body>
 
-<form method="post" action="logar.php" id="login-form" name="formlogin">
+<form method="post" action="recEmail.php" id="login-form" name="formlogin">
     <fieldset>
 
         <legend>Log in</legend>
 
-        <label for="login">User</label>
-        <input type="text" id="login" name="user"/>
+        <label for="login">Username</label>
+        <input type="text" id="login" name="username"/>
         <div class="clear"></div>
 
-        <label for="password">Password</label>
-        <input type="password" id="password" name="pwd"/>
+        <label for="Email">E-mail</label>
+        <input type="email" id="email" name="email"/>
         <div class="clear"></div>
 
-        <label for="remember_me" style="padding: 0;">Forgot?</label>
-        <a href="recuperar.php">Recover</a>
         <div class="clear"></div>
 
         <br />
 
-        <input type="submit" style="margin: -20px 0 0 287px;" class="button" name="commit" value="Log in"/>
+        <input type="submit" style="margin: -20px 0 0 287px;" class="button" name="commit" value="Send"/>
     </fieldset>
 </form>
 

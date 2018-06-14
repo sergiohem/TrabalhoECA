@@ -21,7 +21,7 @@ class reportDAO
         $this->currentDate = date('d/m/Y H:i:s')."hs";
     }
 
-    public function listarBeneficiariosOrdemAlfabetica()
+    public function report1()
     {
         global $pdo;
         try {
@@ -29,7 +29,7 @@ class reportDAO
             if ($statement->execute()) {
                 $rs = $statement->fetchAll(PDO::FETCH_OBJ);
 
-                $html = '<h2>BENEFICIARIES ORDER BY NAME</h2>
+                $html = '<h2>REPORT 1</h2>
 <br />
 <p>Report generation date: '.$this->currentDate.'hs</p>
 <br />
@@ -59,7 +59,7 @@ class reportDAO
         }
     }
 
-    public function listarBeneficiariosESuasCidades()
+    public function report2()
     {
         global $pdo;
         try {
@@ -77,7 +77,7 @@ ORDER BY city.str_name_city, ben.str_name_person LIMIT 20");
 
             if ($statement->execute()) {
                 $rs = $statement->fetchAll(PDO::FETCH_OBJ);
-                $html = '<h2>BENEFICIARIES AND THEIR CITIES</h2>
+                $html = '<h2>REPORT 2</h2>
 <br />
 <p>Report generation date: '.$this->currentDate.'</p>
 <br />
@@ -110,7 +110,7 @@ ORDER BY city.str_name_city, ben.str_name_person LIMIT 20");
         }
     }
 
-    public function listarPagamentos(){
+    public function report3(){
         global $pdo;
         try {
             $statement = $pdo->prepare("SELECT 
@@ -136,11 +136,11 @@ FROM
 	tb_files as fi ON pay.tb_files_id_file = fi.id_file
 		JOIN
 	tb_state as st ON city.tb_state_id_state = st.id_state
-		LIMIT 20");
+		LIMIT 5");
 
             if ($statement->execute()) {
                 $rs = $statement->fetchAll(PDO::FETCH_OBJ);
-                $html = '<h2>PAYMENTS</h2>
+                $html = '<h2>REPORT 3</h2>
 <br />
 <p>Report generation date: '.$this->currentDate.'</p>
 <br />
@@ -177,7 +177,7 @@ FROM
 <td>'.$payment->str_name_file.'</td>
 <td>'.$payment->int_month.'</td>
 <td>'.$payment->int_year.'</td>
-<td>'.$payment->db_value.'</td>
+<td>'.number_format($payment->db_value, 2, ',', '').'</td>
 </tr>';
                 }
 
@@ -215,7 +215,7 @@ ORDER BY SUM(pay.db_value) DESC");
 
             if ($statement->execute()) {
                 $rs = $statement->fetchAll(PDO::FETCH_OBJ);
-                $html = '<h2>PAYMENTS</h2>
+                $html = '<h2>REPORT 4</h2>
 <br />
 <p>Report generation date: '.$this->currentDate.'</p>
 <br />
@@ -236,7 +236,7 @@ ORDER BY SUM(pay.db_value) DESC");
 <td>'.$payment->str_name_city.' - '.$payment->str_uf.'</td>
 <td>'.$payment->beneficiaries_count.'</td>
 <td>'.$payment->int_month.'</td>
-<td>'.$payment->total_payments.'</td>
+<td>'.number_format($payment->total_payments, 2, ',', '').'</td>
 </tr>';
                 }
 
@@ -262,11 +262,12 @@ FROM
         JOIN
     tb_beneficiaries AS ben ON pay.tb_beneficiaries_id_beneficiaries = ben.id_beneficiaries
 GROUP BY ben.id_beneficiaries, pay.int_month
-ORDER BY ben.str_name_person;");
+ORDER BY ben.str_name_person
+LIMIT 5");
 
             if ($statement->execute()) {
                 $rs = $statement->fetchAll(PDO::FETCH_OBJ);
-                $html = '<h2>PAYMENTS</h2>
+                $html = '<h2>REPORT 5</h2>
 <br />
 <p>Report generation date: '.$this->currentDate.'</p>
 <br />
@@ -289,7 +290,7 @@ ORDER BY ben.str_name_person;");
 <td>'.$payment->str_name_person.'</td>
 <td>'.$payment->payments_number.'</td>
 <td>'.$payment->int_month.'</td>
-<td>'.$payment->db_value.'</td>
+<td>'.number_format($payment->db_value, 2, ',', '').'</td>
 </tr>';
                 }
 
@@ -323,7 +324,7 @@ ORDER BY reg.str_name_region");
 
             if ($statement->execute()) {
                 $rs = $statement->fetchAll(PDO::FETCH_OBJ);
-                $html = '<h2>PAYMENTS</h2>
+                $html = '<h2>REPORT 6</h2>
 <br />
 <p>Report generation date: '.$this->currentDate.'</p>
 <br />
@@ -340,7 +341,7 @@ ORDER BY reg.str_name_region");
                 foreach ($rs as $payment) {
                     $html .= '<tr>
 <td>'.$payment->str_name_region.'</td>
-<td>'.$payment->totalValuePayments.'</td>
+<td>'.number_format($payment->totalValuePayments, 2, ',', '').'</td>
 </tr>';
                 }
 
@@ -372,7 +373,7 @@ ORDER BY st.str_name");
 
             if ($statement->execute()) {
                 $rs = $statement->fetchAll(PDO::FETCH_OBJ);
-                $html = '<h2>PAYMENTS</h2>
+                $html = '<h2>REPORT 7</h2>
 <br />
 <p>Report generation date: '.$this->currentDate.'</p>
 <br />
@@ -389,7 +390,7 @@ ORDER BY st.str_name");
                 foreach ($rs as $payment) {
                     $html .= '<tr>
 <td>'.$payment->str_name.'</td>
-<td>'.$payment->totalValuePayments.'</td>
+<td>'.number_format($payment->totalValuePayments, 2, ',', '').'</td>
 </tr>';
                 }
 

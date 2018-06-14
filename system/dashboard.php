@@ -13,13 +13,20 @@ $totalPagamentos = $object->totalPagamentos();
 $totalPagamentosUltimoMes = $object->totalPagamentosUltimoMes();
 $mediaPagamentosUltimoMes = $object->mediaPagamentosUltimoMes();
 
-$template = new Template();
+$template = new template();
 
 $template->header();
 
 $template->sidebar();
 
 $template->mainpanel();
+
+date_default_timezone_set('America/Sao_Paulo');
+$monthSelected = date('n');
+
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    $monthSelected = (isset($_GET["selectMonth"]) && $_GET["selectMonth"] != null) ? $_GET["selectMonth"] : "";
+}
 
 
 
@@ -65,7 +72,7 @@ $template->mainpanel();
                             <div class="col-xs-7">
                                 <div class="numbers">
                                     <p>Payments</p>
-                                    R$<?= $totalPagamentosUltimoMes ?>
+                                    R$<?= number_format($totalPagamentosUltimoMes, 2, ',', ''); ?>
                                 </div>
                             </div>
                         </div>
@@ -90,7 +97,7 @@ $template->mainpanel();
                             <div class="col-xs-7">
                                 <div class="numbers">
                                     <p>Average</p>
-                                    R$<?= $mediaPagamentosUltimoMes ?>
+                                    R$<?= number_format($mediaPagamentosUltimoMes, 2, ',', ''); ?>
                                 </div>
                             </div>
                         </div>
@@ -142,12 +149,6 @@ $template->mainpanel();
                             <img src="graphics/graphic1.php" />
                         </div>
                         <div class="footer">
-                            <div class="chart-legend">
-                                <i class="fa fa-circle text-info"></i> Value
-                                <i class="fa fa-circle text-danger"></i> Value
-                                <i class="fa fa-circle text-warning"></i> Value
-                            </div>
-                            <hr>
                             <div class="stats">
                                 <i class="ti-info-alt"></i> Historic Serie | <i class="ti-export"></i><a href="graphics/graphic1.php?pdf=1" target="_blank">Export PDF</a>
                             </div>
@@ -183,16 +184,34 @@ $template->mainpanel();
                         <p class="category">Monthly update</p>
                     </div>
                     <div class="content">
-                        <div id="chartActivity" class="ct-chart" style="height: 400px;"></div>
+                        <form method="get" action="?selectMonth=">
+                            <label>Select the month: </label>
+                            <select name="selectMonth">
+                                <option value="1">January</option>
+                                <option value="2">February</option>
+                                <option value="3">March</option>
+                                <option value="4">April</option>
+                                <option value="5">May</option>
+                                <option value="6">June</option>
+                                <option value="7">July</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10">Octuber</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select><br/>
+                            <button type="submit">Generate graphic</button>
+
+
+                            <div id="chartActivity" class="ct-chart" style="height: 550px;">
+                                <img Ssrc="graphics/graphic3.php?selectMonth=<?=$monthSelected?>" />
+                            </div>
+                        </form>
 
                         <div class="footer">
-                            <div class="chart-legend">
-                                <i class="fa fa-circle text-info"></i> Value
-                                <i class="fa fa-circle text-warning"></i> Value
-                            </div>
                             <hr>
                             <div class="stats">
-                                <i class="ti-check"></i> Last Month | <i class="ti-export"></i><a href="graphics/graphic3.php?pdf=1" target="_blank">Export PDF</a>
+                                <i class="ti-check"></i> Last Month | <i class="ti-export"></i><a href="graphics/graphic3.php?pdf=1&selectMonth=<?=$monthSelected?>" target="_blank">Export PDF</a>
                             </div>
                         </div>
                     </div>
@@ -207,3 +226,11 @@ $template->mainpanel();
 $template->footer();
 
 ?>
+
+<!--<script type="text/javascript">-->
+<!--    $(document).ready(function () {-->
+<!--        $("#generateGraphic3").on("submit", function () {-->
+<!--            alert();-->
+<!--        })-->
+<!--    })-->
+<!--</script>-->

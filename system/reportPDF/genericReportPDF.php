@@ -46,13 +46,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     switch ($report){
         case "1":
-            $html = $reportDAO->listarBeneficiariosOrdemAlfabetica();
+            $html = $reportDAO->report1();
             break;
         case "2":
-            $html = $reportDAO->listarBeneficiariosESuasCidades();
+            $html = $reportDAO->report2();
             break;
         case "3":
-            $html = $reportDAO->listarPagamentos();
+            $html = $reportDAO->report3();
             break;
         case "4":
             $html = $reportDAO->report4();
