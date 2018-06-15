@@ -82,6 +82,7 @@ class userDAO
         }
     }
 
+
     public function buscarPorUsernameEEmail($username, $email){
         global $pdo;
         try {

@@ -19,7 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = (isset($_POST["username"]) && $_POST["username"] != null) ? $_POST["username"] : "";
     $email = (isset($_POST["email"]) && $_POST["email"] != null) ? $_POST["email"] : "";
     $user = $userDAO->buscarPorUsernameEEmail($username, $email);
+    $user->setPassword(sha1('123456'));
+    $userDAO->salvar($user);
 }
+
 
 //require "libs/PHPMailer/src/PHPMailer.php";
 //require "libs/PHPMailer/src/SMTP.php";
@@ -46,7 +49,7 @@ $mail->SMTPSecure = 'ssl';
 $mail->SMTPAuth = true;
 
 $mail->Username = "sergiohenriquemarques22@gmail.com";
-$mail->Password = "soueumesmo";
+$mail->Password = "senha";
 
 
 $mail->setFrom($user->getEmail(), $user->getName());
@@ -64,7 +67,7 @@ $mail->msgHTML("Sua senha temporária é 123456 <br> Não perca novamente!");
 if (!$mail->send()) {
     echo "Erro ao enviar o E-mail: " . $mail->ErrorInfo;
 } else {
-    $user->setPassword(sha1('123456'));
-    $userDAO->atualizar($user);
     echo "E-mail enviado com sucesso!";
 }
+
+header('location:login.php');

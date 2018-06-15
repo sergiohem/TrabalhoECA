@@ -54,7 +54,7 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $idPayment != "") {
 
     $payment = new payment($idPayment, '', '', '', '', '', '', '', '', '','','');
 
-    $resultado = $object->atualizar($action);
+    $resultado = $object->atualizar($payment);
     $city = $resultado->getCity();
     $function = $resultado->getFunction();
     $subfunction = $resultado->getSubfunction();

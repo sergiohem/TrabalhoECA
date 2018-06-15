@@ -204,7 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 
                             <div id="chartActivity" class="ct-chart" style="height: 550px;">
-                                <img Ssrc="graphics/graphic3.php?selectMonth=<?=$monthSelected?>" />
+                                <img src="graphics/graphic3.php?selectMonth=<?=$monthSelected?>" />
                             </div>
                         </form>
 
